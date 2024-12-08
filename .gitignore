@@ -1,0 +1,7 @@
+# Ignore all node modules
+node_modules
+
+# Ignore the env file
+.env
+
+to_install.txt
