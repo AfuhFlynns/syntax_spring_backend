@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "\"A learning platform that allows users to learn new programming languages with a personalized coding editor, path with other amazing assets\"",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./dist/server.js",
