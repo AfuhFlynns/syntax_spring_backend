@@ -1,78 +1,59 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
+import { usersSchemaTypes } from "../TYPES.js";
 
-const schema = mongoose.Schema;
-
-const userSchema = new schema(
+const usersChema = new Schema<usersSchemaTypes>(
   {
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    names: {
+      firstName: String,
+      lastName: String,
+    },
     email: {
       type: String,
-      require: true,
+      required: true,
       unique: true,
     },
     password: {
       type: String,
-      require: true,
+      required: true,
     },
-    username: {
+    phoneNumber: {
       type: String,
-      require: true,
+      default: null,
     },
-    profilePicture: {
+    role: {
       type: String,
-      default: "https://cdn-icons-png.flaticon.com/128/149/149071.png",
+      enum: ["admin", "user", "editor"],
+      default: "user",
     },
-    subjectsOffered: {
-      type: Array,
-      default: [],
-    },
-    levelOfStudy: {
-      type: String,
-      require: true,
-    },
-    seriesOfStudy: {
-      type: String,
-      require: true,
-    },
-    lastLogin: {
-      type: Date,
-      default: Date.now(),
-    },
-    accecptEmails: {
-      type: Boolean,
-      default: true,
-    },
-    prefersScheme: {
-      type: String,
-      default: "light",
-    },
-    roles: {
-      User: {
-        type: Number,
-        default: 1000,
+    isActive: { type: Boolean, default: false },
+    preferences: {
+      theme: {
+        type: String,
+        enum: ["dark", "light"],
+        default: "dark",
       },
-      Teacher: Number,
+      acceptNotifications: {
+        type: Boolean,
+        default: true,
+      },
     },
-    telephoneNumber: {
-      type: Number,
-    },
-    fullname: String,
-    schoolname: String,
-    gender: String,
-    birthdate: Date,
-    country: String,
-    isVerified: {
-      type: Boolean,
-      default: false,
-    },
-    verificationCode: String,
-    verificationCodeExpiresAt: Date,
-    accessToken: String,
-    accessTokenExpiresAt: Date,
-    resetPasswordToken: String,
-    resetPasswordTokenExpiresAt: Date,
+    tokens: [
+      {
+        type: {
+          type: String,
+          enum: ["access", "refresh", "resetPassword"],
+        },
+        token: String,
+      },
+    ],
   },
-  { timestamps: true }
+  { timestamps: true } // NOTE: Automatic time stamp tracking
 );
 
-const User = mongoose.model("User", userSchema);
-export default User;
+// Create the users db and schema (model)
+export const User = mongoose.model<usersSchemaTypes>("User", usersChema);
