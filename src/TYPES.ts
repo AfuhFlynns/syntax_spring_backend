@@ -26,3 +26,18 @@ export interface usersSchemaTypes {
     expiresAt: Date;
   }[];
 }
+
+export interface challengesTypes {
+  title: string;
+  type: "html" | "css" | "js" | "tailwindcss" | "ts" | "python" | "c/c++";
+  description: string;
+  difficulty: string;
+  initialCode: string;
+  solution: string;
+  hints: {
+    hint: string;
+  }[];
+  tags: {
+    tag: string;
+  }[];
+}
