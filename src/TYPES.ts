@@ -11,10 +11,12 @@ export interface usersSchemaTypes {
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
+  lastLogin: Date;
   preferences?: {
     theme: "light" | "dark";
     acceptNotifications: boolean;
   };
+  avatar: string;
   tokens: {
     type: "access" | "refresh" | "resetPassword";
     token: string;

@@ -42,6 +42,10 @@ const usersChema = new Schema<usersSchemaTypes>(
         default: true,
       },
     },
+    avatar: {
+      type: String,
+      default: "https://cdn-icons-png.flaticon.com/128/149/149071.png",
+    },
     tokens: [
       {
         type: {

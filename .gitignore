@@ -3,5 +3,6 @@ node_modules
 
 # Ignore the env file
 .env
-
+./assets/readme1.png
+./assets/readme2.png
 to_install.txt

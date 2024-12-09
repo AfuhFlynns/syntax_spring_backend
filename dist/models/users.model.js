@@ -1,73 +1,59 @@
-import mongoose from "mongoose";
-const schema = mongoose.Schema;
-const userSchema = new schema({
+import mongoose, { Schema } from "mongoose";
+const usersChema = new Schema({
+    username: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    names: {
+        firstName: String,
+        lastName: String,
+    },
     email: {
         type: String,
-        require: true,
+        required: true,
         unique: true,
     },
     password: {
         type: String,
-        require: true,
+        required: true,
     },
-    username: {
+    phoneNumber: {
         type: String,
-        require: true,
+        default: null,
     },
-    profilePicture: {
+    role: {
+        type: String,
+        enum: ["admin", "user", "editor"],
+        default: "user",
+    },
+    isActive: { type: Boolean, default: false },
+    preferences: {
+        theme: {
+            type: String,
+            enum: ["dark", "light"],
+            default: "dark",
+        },
+        acceptNotifications: {
+            type: Boolean,
+            default: true,
+        },
+    },
+    avatar: {
         type: String,
         default: "https://cdn-icons-png.flaticon.com/128/149/149071.png",
     },
-    subjectsOffered: {
-        type: Array,
-        default: [],
-    },
-    levelOfStudy: {
-        type: String,
-        require: true,
-    },
-    seriesOfStudy: {
-        type: String,
-        require: true,
-    },
-    lastLogin: {
-        type: Date,
-        default: Date.now(),
-    },
-    accecptEmails: {
-        type: Boolean,
-        default: true,
-    },
-    prefersScheme: {
-        type: String,
-        default: "light",
-    },
-    roles: {
-        User: {
-            type: Number,
-            default: 1000,
+    tokens: [
+        {
+            type: {
+                type: String,
+                enum: ["access", "refresh", "resetPassword"],
+            },
+            token: String,
         },
-        Teacher: Number,
-    },
-    telephoneNumber: {
-        type: Number,
-    },
-    fullname: String,
-    schoolname: String,
-    gender: String,
-    birthdate: Date,
-    country: String,
-    isVerified: {
-        type: Boolean,
-        default: false,
-    },
-    verificationCode: String,
-    verificationCodeExpiresAt: Date,
-    accessToken: String,
-    accessTokenExpiresAt: Date,
-    resetPasswordToken: String,
-    resetPasswordTokenExpiresAt: Date,
-}, { timestamps: true });
-const User = mongoose.model("User", userSchema);
-export default User;
+    ],
+}, { timestamps: true } // NOTE: Automatic time stamp tracking
+);
+// Create the users db and schema (model)
+export const User = mongoose.model("User", usersChema);
 //# sourceMappingURL=users.model.js.map
