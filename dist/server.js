@@ -5,13 +5,13 @@ import * as dotenv from "dotenv";
 import morgan from "morgan";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-// import mongoose from "mongoose";
+import mongoose from "mongoose";
 // File system set up
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-// import connectDB from "./utils/DB/connectDB.js";
+import connectDB from "./utils/DB/connectDB.js";
 import allowedOrigins from "./utils/cors/corsOptions.js";
-// connectDB();
+connectDB();
 dotenv.config();
 const PORT = Number(process.env.PORT) | 8000;
 const app = express();
@@ -50,7 +50,7 @@ app.get("*", (req, res) => {
         res.status(404).send("Page not found"); // NOTE: Send text if client accepts it
     }
 });
-// mongoose.connection.once("open", () => {
-app.listen(PORT, () => console.log(`App is running on port: ${PORT}`));
-// });
+mongoose.connection.once("open", () => {
+    app.listen(PORT, () => console.log(`App is running on port: ${PORT}`));
+});
 //# sourceMappingURL=server.js.map

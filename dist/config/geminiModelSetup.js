@@ -7,17 +7,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import mongoose from "mongoose";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import * as dotenv from "dotenv";
 dotenv.config();
-const connectDB = () => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        yield mongoose.connect(String(process.env.MONGODB_URL));
-        console.log("Connected to db");
-    }
-    catch (error) {
-        console.error(error);
-    }
+const genAI = new GoogleGenerativeAI(String(process.env.GOOGLE_GEMINI_API_KEY));
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const callAIEndPoint = (prompt) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield model.generateContent(`Go through this code: ${prompt}\nAnd then hlep me with a hint or linting on how to solve the problem without any actual solution`);
+    return String(result.response.text());
 });
-export default connectDB;
-//# sourceMappingURL=connectDB.js.map
+export default callAIEndPoint;
+//# sourceMappingURL=geminiModelSetup.js.map
