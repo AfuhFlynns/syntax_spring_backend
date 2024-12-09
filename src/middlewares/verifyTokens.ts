@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import * as dotenv from "dotenv";
 dotenv.config();
-import User from "../models/user.model.js";
+import { User } from "../models/users.model.js";
 const verifyTokens = async (req, res, next) => {
   const sentCookie = req.cookies?.token;
   try {
