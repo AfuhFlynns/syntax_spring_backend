@@ -2,7 +2,13 @@ import jwt from "jsonwebtoken";
 import * as dotenv from "dotenv";
 dotenv.config();
 import { User } from "../models/users.model.js";
-const verifyTokens = async (req, res, next) => {
+import { Response, Request, NextFunction } from "express";
+
+const verifyTokens = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const sentCookie = req.cookies?.token;
   try {
     const foundUser = await User.findOne({
