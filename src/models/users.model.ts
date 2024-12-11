@@ -55,6 +55,28 @@ const usersChema = new Schema<usersSchemaTypes>(
         token: String,
       },
     ],
+    achievements: [{ type: String }],
+    progress: [
+      {
+        challengeId: {
+          type: Schema.Types.ObjectId,
+          ref: "Challenge",
+          required: true,
+        },
+        status: {
+          type: String,
+          enum: ["not-started", "in-progress", "completed"],
+          default: "not-started",
+        },
+        lastSubmission: {
+          type: String,
+        },
+        score: {
+          type: Number,
+          default: 0,
+        },
+      },
+    ],
   },
   { timestamps: true } // NOTE: Automatic time stamp tracking
 );

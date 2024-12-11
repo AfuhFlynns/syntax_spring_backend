@@ -1,4 +1,6 @@
-export interface usersSchemaTypes {
+import { Schema, Document } from "mongoose";
+
+export interface usersSchemaTypes extends Document {
   username: string;
   names: {
     firstName: string;
@@ -27,6 +29,13 @@ export interface usersSchemaTypes {
     code: string;
     expiresAt: Date;
   }[];
+  progress: {
+    challengeId: Schema.Types.ObjectId;
+    status: "note-started" | "in-progress" | "completed";
+    lastSubmission?: string;
+    score?: number;
+  }[];
+  achievements: string[];
 }
 
 export interface challengesTypes {
