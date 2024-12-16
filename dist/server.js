@@ -11,6 +11,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 import connectDB from "./utils/DB/connectDB.js";
 import allowedOrigins from "./utils/cors/corsOptions.js";
+import userRouter from "./routers/users.router.js";
 connectDB();
 dotenv.config();
 const PORT = Number(process.env.PORT) | 8000;
@@ -38,6 +39,8 @@ app.get("/", (req, res) => {
         .status(200)
         .json({ success: true, message: "Hello, from Syntax Spring api" });
 });
+// Listen to request from the users route
+app.use("/users", userRouter);
 //ALERT: Listen for unknown urls
 app.get("*", (req, res) => {
     if (req.accepts("json")) {

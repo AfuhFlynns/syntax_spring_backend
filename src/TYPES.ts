@@ -40,7 +40,15 @@ export interface usersSchemaTypes extends Document {
 
 export interface challengesTypes {
   title: string;
-  type: "html" | "css" | "js" | "tailwindcss" | "ts" | "python" | "c/c++";
+  type:
+    | "html"
+    | "css"
+    | "js"
+    | "tailwindcss"
+    | "ts"
+    | "python"
+    | "c/c++"
+    | "vb.net";
   description: string;
   difficulty: string;
   initialCode: string;

@@ -10,7 +10,16 @@ const challengesSchema = new Schema<challengesTypes>({
   type: {
     type: String,
     required: Boolean,
-    enum: ["html", "css", "js", "tailwindcss", "ts", "python", "c/c++"],
+    enum: [
+      "html",
+      "css",
+      "js",
+      "tailwindcss",
+      "ts",
+      "python",
+      "c/c++",
+      "vb.net",
+    ],
   },
   description: {
     type: String,

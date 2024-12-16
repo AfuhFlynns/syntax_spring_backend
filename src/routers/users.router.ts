@@ -1,8 +1,15 @@
-import { Router } from "express";
+import { Router, Request, Response } from "express";
 import { signUpUser } from "../controllers/users.controller.js";
 
 const userRouter = Router();
 
-userRouter.post("/sign-up", signUpUser);
+userRouter.post("/sign-up", async (req: Request, res: Response) => {
+  try {
+    await signUpUser(req, res);
+  } catch (error) {
+    console.error("Error in sign-up route:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 export default userRouter;

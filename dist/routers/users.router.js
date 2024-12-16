@@ -7,19 +7,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import mongoose from "mongoose";
-import * as dotenv from "dotenv";
-dotenv.config();
-const connectDB = () => __awaiter(void 0, void 0, void 0, function* () {
+import { Router } from "express";
+import { signUpUser } from "../controllers/users.controller.js";
+const userRouter = Router();
+userRouter.post("/sign-up", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield mongoose.connect(String(process.env.MONGODB_URL));
-        if (process.env.APP_STATUS !== "production")
-            console.log("Connected to MongoDB");
+        yield signUpUser(req, res);
     }
     catch (error) {
-        console.error(`Error connecting to MongoDB: ${error.message}`);
-        process.exit(1);
+        console.error("Error in sign-up route:", error);
+        res.status(500).json({ error: "Internal server error" });
     }
-});
-export default connectDB;
-//# sourceMappingURL=connectDB.js.map
+}));
+export default userRouter;
+//# sourceMappingURL=users.router.js.map
