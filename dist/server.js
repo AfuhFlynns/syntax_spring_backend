@@ -12,6 +12,7 @@ const __dirname = path.dirname(__filename);
 import connectDB from "./utils/DB/connectDB.js";
 import allowedOrigins from "./utils/cors/corsOptions.js";
 import userRouter from "./routers/users.router.js";
+import challengesRouter from "./routers/challenges.router.js";
 connectDB();
 dotenv.config();
 const PORT = Number(process.env.PORT) | 8000;
@@ -41,6 +42,8 @@ app.get("/", (req, res) => {
 });
 // Listen to request from the users route
 app.use("/users", userRouter);
+// Listen to requests from the challenges route
+app.use("/challenges", challengesRouter);
 //ALERT: Listen for unknown urls
 app.get("*", (req, res) => {
     if (req.accepts("json")) {

@@ -33,9 +33,11 @@ const signUpUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         };
         const newUser = new User(newUserData);
         const savedUser = yield newUser.save();
+        // Convert the document to a plain object and omit the password
+        const userObject = savedUser.toObject();
         return res
-            .status(200)
-            .json({ success: true, user: Object.assign(Object.assign({}, savedUser._doc), { password: "" }) });
+            .status(201)
+            .json({ success: true, user: Object.assign(Object.assign({}, userObject), { password: "" }) });
     }
     catch (error) {
         res.status(500).json({ success: false, message: error.message });

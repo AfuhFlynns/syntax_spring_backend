@@ -28,9 +28,13 @@ const signUpUser = async (req: Request, res: Response) => {
 
     const newUser = new User(newUserData);
     const savedUser = await newUser.save();
+
+    // Convert the document to a plain object and omit the password
+    const userObject = savedUser.toObject();
+
     return res
-      .status(200)
-      .json({ success: true, user: { ...savedUser._doc, password: "" } });
+      .status(201)
+      .json({ success: true, user: { ...userObject, password: "" } });
   } catch (error: any | { message: string }) {
     res.status(500).json({ success: false, message: error.message });
   }

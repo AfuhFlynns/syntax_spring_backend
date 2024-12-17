@@ -14,6 +14,7 @@ const __dirname = path.dirname(__filename);
 import connectDB from "./utils/DB/connectDB.js";
 import allowedOrigins from "./utils/cors/corsOptions.js";
 import userRouter from "./routers/users.router.js";
+import challengesRouter from "./routers/challenges.router.js";
 
 connectDB();
 
@@ -51,6 +52,9 @@ app.get("/", (req: Request, res: Response) => {
 
 // Listen to request from the users route
 app.use("/users", userRouter);
+
+// Listen to requests from the challenges route
+app.use("/challenges", challengesRouter);
 
 //ALERT: Listen for unknown urls
 app.get("*", (req: Request, res: Response) => {

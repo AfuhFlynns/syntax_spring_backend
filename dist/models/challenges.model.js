@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-const challengesSchema = new Schema({
+const challengeSchema = new Schema({
     title: {
         type: String,
         unique: true,
@@ -43,15 +43,7 @@ const challengesSchema = new Schema({
         },
     ],
 });
-// ?: This increases the possibility of multiple models with same type. Eleminating need for multi files
-const htmlChallenge = mongoose.model("htmlChallenge", challengesSchema);
-const cssChallenge = mongoose.model("cssChallenge", challengesSchema);
-const jsChallenge = mongoose.model("jsChallenge", challengesSchema);
-const reactChallenge = mongoose.model("reactChallenge", challengesSchema);
-const tsChallenge = mongoose.model("tsChallenge", challengesSchema);
-const tailwindcssChallenge = mongoose.model("taliwindcssChallenge", challengesSchema);
-const pythonChallenge = mongoose.model("pythonChallenge", challengesSchema);
-const c_cppChallenge = mongoose.model("c_cppChallenge", challengesSchema);
+const challengesSchema = mongoose.model("Challenge", challengeSchema);
 // NOTE: Exporting all models for easy usage
-export { htmlChallenge, cssChallenge, jsChallenge, reactChallenge, tsChallenge, tailwindcssChallenge, pythonChallenge, c_cppChallenge, };
+export { challengesSchema };
 //# sourceMappingURL=challenges.model.js.map
