@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { Router } from "express";
 import { createChallenges, getAllChallenges, } from "../controllers/challenges.controller.js";
 const challengesRouter = Router();
-challengesRouter.get("/api", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+challengesRouter.get("/api/all", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield getAllChallenges(req, res);
     }

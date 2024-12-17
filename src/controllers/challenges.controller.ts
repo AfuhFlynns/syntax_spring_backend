@@ -19,6 +19,9 @@ const getAllChallenges = async (req: Request, res: Response) => {
         .json({ success: false, message: "No challenges available yet!" });
     }
 
+    console.clear();
+    // console.table(foundChallenges.length);
+
     res.status(200).json({ success: true, challenges: foundChallenges });
   } catch (error: any | { message: string }) {
     res.status(500).json({ success: false, message: error.message });

@@ -6,7 +6,7 @@ import {
 
 const challengesRouter = Router();
 
-challengesRouter.get("/api", async (req: Request, res: Response) => {
+challengesRouter.get("/api/all", async (req: Request, res: Response) => {
   try {
     await getAllChallenges(req, res);
   } catch (error) {
