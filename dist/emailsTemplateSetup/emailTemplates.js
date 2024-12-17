@@ -5,7 +5,96 @@ const verificationEmailTemplate = `<!DOCTYPE html>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Email Verification</title>
   <style>
-    /* Dark Mode Styles */
+    /* General Reset */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f7fc;
+      color: #333333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .email-container {
+      min-height: 85vh;
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #e1e4e8;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Header */
+    .email-header {
+      text-align: center;
+      padding: 20px;
+      background-color: #0073e6;
+    }
+
+    .email-header img {
+      max-width: 150px;
+    }
+
+    /* Main Content */
+    .email-content {
+      padding: 20px;
+      text-align: center;
+    }
+
+    .verification-code {
+      margin: 20px auto;
+      padding: 15px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #0073e6;
+      background-color: #f1f8fe;
+      border: 1px solid #d6e9ff;
+      border-radius: 8px;
+      max-width: 300px;
+    }
+
+    .email-button {
+      display: inline-block;
+      background-color: #0073e6;
+      color: #ffffff;
+      text-decoration: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      margin: 20px 0;
+    }
+
+    /* Footer */
+    .email-footer {
+      background-color: #f9fafc;
+      padding: 10px;
+      text-align: center;
+      font-size: 14px;
+      color: #666666;
+    }
+
+    .email-footer a {
+      color: #0073e6;
+      text-decoration: none;
+    }
+
+    /* Responsive Design */
+    @media screen and (max-width: 768px) {
+      .email-container {
+        width: 95%;
+      }
+
+      .verification-code {
+        font-size: 20px;
+        padding: 10px;
+      }
+    }
+
+    /* Dark Mode */
     @media (prefers-color-scheme: dark) {
       body {
         background-color: #121212;
@@ -26,6 +115,7 @@ const verificationEmailTemplate = `<!DOCTYPE html>
       .email-button {
         background-color: #1a73e8;
         color: #ffffff;
+        cursor: pointer;
       }
       .email-footer {
         background-color: #292929;
@@ -34,35 +124,37 @@ const verificationEmailTemplate = `<!DOCTYPE html>
     }
   </style>
 </head>
-<body style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f7fc; color: #333333;">
-  <div class="email-container" style="min-height: 85vh; max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; border: 1px solid #e1e4e8; display: flex; flex-direction: column; justify-content: space-between;">
+<body>
+  <div class="email-container">
     <!-- Header -->
-    <div class="email-header" style="text-align: center; padding: 20px; background-color: #0073e6;">
-      <img src="[logo_url]" alt="SyntaxSpring Logo" style="max-width: 150px;">
+    <div class="email-header">
+      <img src="cid:unique_inline_logo_cid" alt="SyntaxSpring Logo"> <h1 style="color: #FFFFFF; font-weight: bold;">Syntax Spring</h1>
     </div>
-    
+
     <!-- Main Content -->
-    <div style="padding: 20px; flex-grow: 1;">
-      <h1 style="color: #0073e6; text-align: center;">Verify Your Email</h1>
-      <p style="font-size: 16px; text-align: center;">
+    <div class="email-content">
+      <h1 style="color: #0073e6;">Verify Your Email</h1>
+      <p>
+        Hi, [user_name] </br>
         Thank you for signing up with SyntaxSpring! Use the code below to verify your email address or click the button to activate your account.
       </p>
+
       <!-- Verification Code -->
-      <div class="verification-code" style="text-align: center; margin: 20px auto; padding: 15px; font-size: 24px; font-weight: bold; color: #0073e6; background-color: #f1f8fe; border-radius: 8px; border: 1px solid #d6e9ff; max-width: 300px;">
-        123456
+      <div class="verification-code">
+        [verification_code]
       </div>
+
       <!-- Button -->
-      <div style="text-align: center; margin: 20px;">
-        <a class="email-button" href="[verification_link]" style="background-color: #0073e6; color: #ffffff; text-decoration: none; padding: 12px 20px; font-size: 16px; border-radius: 5px; display: inline-block;">Verify Email</a>
-      </div>
-      <p style="font-size: 14px; text-align: center;">
+      <a href="[verification_link]" class="email-button">Verify Email</a>
+
+      <p style="font-size: 14px;">
         If you didn’t sign up, ignore this email or contact support for assistance.
       </p>
     </div>
-    
+
     <!-- Footer -->
-    <div class="email-footer" style="background-color: #f9fafc; padding: 10px; text-align: center; font-size: 14px; color: #666666;">
-      <p>Need help? <a href="[support_link]" style="color: #0073e6;">Contact our support team</a>.</p>
+    <div class="email-footer">
+      <p>Need help? <a href="[support_link]" style="cursor: pointer;">Contact our support team</a>.</p>
     </div>
   </div>
 </body>
@@ -73,9 +165,87 @@ const welcomeEmailTemplate = `<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Welcome</title>
+  <title>Welcome to SyntaxSpring!</title>
   <style>
-    /* Dark Mode Styles */
+    /* General Reset */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f7fc;
+      color: #333333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .email-container {
+      min-height: 85vh;
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #e1e4e8;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Header */
+    .email-header {
+      text-align: center;
+      padding: 20px;
+      background-color: #1a73e8;
+    }
+
+    .email-header img {
+      max-width: 150px;
+    }
+
+    /* Main Content */
+    .email-content {
+      padding: 20px;
+      text-align: center;
+    }
+
+    .welcome-message {
+      margin: 20px auto;
+      font-size: 24px;
+      font-weight: bold;
+      color: #1a73e8;
+    }
+
+    .email-button {
+      display: inline-block;
+      background-color: #1a73e8;
+      color: #ffffff;
+      text-decoration: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      margin: 20px 0;
+    }
+
+    .email-footer {
+      background-color: #f9fafc;
+      padding: 10px;
+      text-align: center;
+      font-size: 14px;
+      color: #666666;
+    }
+
+    .email-footer a {
+      color: #1a73e8;
+      text-decoration: none;
+    }
+
+    /* Responsive Design */
+    @media screen and (max-width: 768px) {
+      .email-container {
+        width: 95%;
+      }
+    }
+
+    /* Dark Mode */
     @media (prefers-color-scheme: dark) {
       body {
         background-color: #121212;
@@ -91,6 +261,7 @@ const welcomeEmailTemplate = `<!DOCTYPE html>
       .email-button {
         background-color: #1a73e8;
         color: #ffffff;
+        cursor: pointer;
       }
       .email-footer {
         background-color: #292929;
@@ -99,27 +270,38 @@ const welcomeEmailTemplate = `<!DOCTYPE html>
     }
   </style>
 </head>
-<body style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f7fc; color: #333333;">
-  <div class="email-container" style="min-height: 85vh; max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; border: 1px solid #e1e4e8; display: flex; flex-direction: column; justify-content: space-between;">
+<body>
+  <div class="email-container">
     <!-- Header -->
-    <div class="email-header" style="text-align: center; padding: 20px; background-color: #0073e6;">
-      <img src="[welcome_image_url]" alt="Welcome Image" style="max-width: 100%; height: auto;">
+    <div class="email-header">
+      <img src="cid:unique_inline_logo_cid" alt="SyntaxSpring Logo"> <h1 style="color: #FFFFFF; font-weight: bold;">Syntax Spring</h1>
     </div>
-    
+
     <!-- Main Content -->
-    <div style="padding: 20px; flex-grow: 1;">
-      <h1 style="color: #0073e6; text-align: center;">Welcome to SyntaxSpring!</h1>
-      <p style="font-size: 16px; text-align: center;">
-        We're thrilled to have you with us. Start exploring our tools and features today to boost your productivity!
+    <div class="email-content">
+      <h1 style="color: #1a73e8;">Welcome to SyntaxSpring!</h1>
+      <p class="welcome-message">
+        Hi, [user_name]!</p>
+      <p>
+        Thank you for joining the SyntaxSpring community. We're excited to have you on board! You can now start exploring our platform and make the most of the resources we offer to help you grow and succeed.
       </p>
-      <div style="text-align: center; margin: 20px;">
-        <a class="email-button" href="[dashboard_link]" style="background-color: #0073e6; color: #ffffff; text-decoration: none; padding: 12px 20px; font-size: 16px; border-radius: 5px; display: inline-block;">Go to Dashboard</a>
-      </div>
+
+      <p style="font-size: 16px; color: #555555;">
+        If you're ready to get started, click the button below to begin your journey!
+      </p>
+
+      <!-- Button -->
+      <a href="[onboarding_link]" class="email-button">Start Exploring</a>
+
+      <p style="font-size: 14px;">
+        Need help or have questions? Our support team is here to assist you. Feel free to reach out!
+      </p>
     </div>
-    
+
     <!-- Footer -->
-    <div class="email-footer" style="background-color: #f9fafc; padding: 10px; text-align: center; font-size: 14px; color: #666666;">
-      <p>Follow us on <a href="[social_link]" style="color: #0073e6;">social media</a> for updates!</p>
+    <div class="email-footer">
+      <p>Have a question? <a href="[support_link]">Contact our support team</a>.</p>
+      <p>Enjoy your experience with SyntaxSpring!</p>
     </div>
   </div>
 </body>
@@ -130,32 +312,143 @@ const passwordResetEmailTemplate = `<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Password Reset</title>
+  <title>Password Reset Request</title>
+  <style>
+    /* General Reset */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f7fc;
+      color: #333333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .email-container {
+      min-height: 85vh;
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #e1e4e8;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Header */
+    .email-header {
+      text-align: center;
+      padding: 20px;
+      background-color: #ff6f61;
+    }
+
+    .email-header img {
+      max-width: 150px;
+    }
+
+    /* Main Content */
+    .email-content {
+      padding: 20px;
+      text-align: center;
+    }
+
+    .reset-message {
+      margin: 20px auto;
+      font-size: 20px;
+      color: #ff6f61;
+    }
+
+    .email-button {
+      display: inline-block;
+      background-color: #ff6f61;
+      color: #ffffff;
+      text-decoration: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      margin: 20px 0;
+    }
+
+    .email-footer {
+      background-color: #f9fafc;
+      padding: 10px;
+      text-align: center;
+      font-size: 14px;
+      color: #666666;
+    }
+
+    .email-footer a {
+      color: #ff6f61;
+      text-decoration: none;
+    }
+
+    /* Responsive Design */
+    @media screen and (max-width: 768px) {
+      .email-container {
+        width: 95%;
+      }
+    }
+
+    /* Dark Mode */
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #121212;
+        color: #e0e0e0;
+      }
+      .email-container {
+        background-color: #1e1e1e;
+        border: 1px solid #333333;
+      }
+      .email-header {
+        background-color: #ff6f61;
+      }
+      .email-button {
+        background-color: #ff6f61;
+        color: #ffffff;
+        cursor: pointer;
+      }
+      .email-footer {
+        background-color: #292929;
+        color: #aaaaaa;
+      }
+    }
+  </style>
 </head>
-<body style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f7fc;">
-  <div style="min-height: 85vh; max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; border: 1px solid #e1e4e8; display: flex; flex-direction: column; justify-content: space-between;">
+<body>
+  <div class="email-container">
     <!-- Header -->
-    <div style="text-align: center; padding: 20px; background-color: #0073e6;">
-      <img src="[security_image_url]" alt="Security Image" style="max-width: 100%; height: auto;">
+    <div class="email-header">
+      <img src="cid:unique_inline_logo_cid" alt="SyntaxSpring Logo"> <h1 style="color: #FFFFFF; font-weight: bold;">Syntax Spring</h1>
     </div>
-    
+
     <!-- Main Content -->
-    <div style="padding: 20px; flex-grow: 1;">
-      <h1 style="color: #0073e6; text-align: center;">Reset Your Password</h1>
-      <p style="font-size: 16px; color: #333333; text-align: center;">
-        You requested a password reset for your SyntaxSpring account. Click below to proceed:
+    <div class="email-content">
+      <h1 style="color: #ff6f61;">Password Reset Request</h1>
+      <p class="reset-message">
+        Hi, [user_name]!</p>
+      <p>
+        We received a request to reset your password. Click the button below to reset your password and get back into your account.
       </p>
-      <div style="text-align: center; margin: 20px;">
-        <a href="[reset_link]" style="background-color: #0073e6; color: #ffffff; text-decoration: none; padding: 12px 20px; font-size: 16px; border-radius: 5px;">Reset Password</a>
-      </div>
-      <p style="font-size: 14px; color: #666666; text-align: center;">
-        Didn’t request a reset? Your account is safe. Contact us if needed.
+
+      <p style="font-size: 16px; color: #555555;">
+        If you did not request a password reset, please ignore this email or contact support.
+      </p>
+
+      <!-- Button -->
+      <a href="[reset_link]" class="email-button">Reset Password</a>
+
+      <p style="font-size: 14px;">
+        If the button above doesn’t work, you can copy and paste the following link into your browser: <br>
+        <a href="[reset_link]" style="color: #ff6f61;">[reset_link]</a>
       </p>
     </div>
-    
+
     <!-- Footer -->
-    <div style="background-color: #f9fafc; padding: 10px; text-align: center; font-size: 14px; color: #666666;">
-      <p>For assistance, <a href="[support_link]" style="color: #0073e6;">reach out to support</a>.</p>
+    <div class="email-footer">
+      <p>Need help? <a href="[support_link]">Contact our support team</a>.</p>
+      <p>Stay safe and secure with SyntaxSpring!</p>
     </div>
   </div>
 </body>
@@ -166,27 +459,142 @@ const accountDeleteEmailTemplate = `<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Account Deletion</title>
+  <title>Account Deletion Request</title>
+  <style>
+    /* General Reset */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f7fc;
+      color: #333333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .email-container {
+      min-height: 85vh;
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #e1e4e8;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Header */
+    .email-header {
+      text-align: center;
+      padding: 20px;
+      background-color: #d9534f;
+    }
+
+    .email-header img {
+      max-width: 150px;
+    }
+
+    /* Main Content */
+    .email-content {
+      padding: 20px;
+      text-align: center;
+    }
+
+    .deletion-message {
+      margin: 20px auto;
+      font-size: 20px;
+      color: #d9534f;
+    }
+
+    .email-button {
+      display: inline-block;
+      background-color: #d9534f;
+      color: #ffffff;
+      text-decoration: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      margin: 20px 0;
+    }
+
+    .email-footer {
+      background-color: #f9fafc;
+      padding: 10px;
+      text-align: center;
+      font-size: 14px;
+      color: #666666;
+    }
+
+    .email-footer a {
+      color: #d9534f;
+      text-decoration: none;
+    }
+
+    /* Responsive Design */
+    @media screen and (max-width: 768px) {
+      .email-container {
+        width: 95%;
+      }
+    }
+
+    /* Dark Mode */
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #121212;
+        color: #e0e0e0;
+      }
+      .email-container {
+        background-color: #1e1e1e;
+        border: 1px solid #333333;
+      }
+      .email-header {
+        background-color: #d9534f;
+      }
+      .email-button {
+        background-color: #d9534f;
+        color: #ffffff;
+        cursor: pointer;
+      }
+      .email-footer {
+        background-color: #292929;
+        color: #aaaaaa;
+      }
+    }
+  </style>
 </head>
-<body style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f7fc;">
-  <div style="min-height: 85vh; max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; border: 1px solid #e1e4e8; display: flex; flex-direction: column; justify-content: space-between;">
+<body>
+  <div class="email-container">
     <!-- Header -->
-    <div style="text-align: center; padding: 20px; background-color: #b22222;">
-      <img src="[goodbye_image_url]" alt="Goodbye Image" style="max-width: 100%; height: auto;">
+    <div class="email-header">
+      <img src="cid:unique_inline_logo_cid" alt="SyntaxSpring Logo"> <h1 style="color: #FFFFFF; font-weight: bold;">Syntax Spring</h1>
     </div>
-    
+
     <!-- Main Content -->
-    <div style="padding: 20px; flex-grow: 1;">
-      <h1 style="color: #b22222; text-align: center;">We’re Sorry to See You Go</h1>
-      <p style="font-size: 16px; color: #333333; text-align: center;">
-        Your account has been successfully deleted. If this was a mistake, contact us immediately to recover your account.
+    <div class="email-content">
+      <h1 style="color: #d9534f;">Account Deletion Request</h1>
+      <p class="deletion-message">
+        Hi, [user_name]!</p>
+      <p>
+        We’ve received a request to delete your SyntaxSpring account. If you didn’t make this request, or if you’ve changed your mind, you can cancel the process by clicking the button below.
       </p>
-      <div style="text-align: center; margin: 20px;">
-        <a href="[support_link]" style="background-color: #b22222; color: #ffffff; text-decoration: none; padding: 12px 20px; font-size: 16px; border-radius: 5px;">Contact Support</a>
-      </div>
-      <p style="font-size: 14px; color: #666666; text-align: center;">
-        Thank you for being part of SyntaxSpring. We hope to see you again.
+
+      <p style="font-size: 16px; color: #555555;">
+        Please note, once your account is deleted, all your data will be permanently removed, and you will no longer have access to any of the services associated with it.
       </p>
+
+      <!-- Button -->
+      <a href="[cancel_deletion_link]" class="email-button">Cancel Account Deletion</a>
+
+      <p style="font-size: 14px;">
+        If you want to proceed with the deletion, no further action is required. The process will be completed within 24 hours.
+      </p>
+    </div>
+
+    <!-- Footer -->
+    <div class="email-footer">
+      <p>Need help or have questions? <a href="[support_link]">Contact our support team</a>.</p>
+      <p>We hope to see you again at SyntaxSpring!</p>
     </div>
   </div>
 </body>
@@ -197,31 +605,296 @@ const accountLogoutEmailTemplate = `<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Account Deletion</title>
+  <title>Account Logout Notification</title>
+  <style>
+    /* General Reset */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f7fc;
+      color: #333333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .email-container {
+      min-height: 85vh;
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #e1e4e8;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Header */
+    .email-header {
+      text-align: center;
+      padding: 20px;
+      background-color: #1a73e8;
+    }
+
+    .email-header img {
+      max-width: 150px;
+    }
+
+    /* Main Content */
+    .email-content {
+      padding: 20px;
+      text-align: center;
+    }
+
+    .logout-message {
+      margin: 20px auto;
+      font-size: 20px;
+      color: #1a73e8;
+    }
+
+    .email-button {
+      display: inline-block;
+      background-color: #1a73e8;
+      color: #ffffff;
+      text-decoration: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      margin: 20px 0;
+    }
+
+    .email-footer {
+      background-color: #f9fafc;
+      padding: 10px;
+      text-align: center;
+      font-size: 14px;
+      color: #666666;
+    }
+
+    .email-footer a {
+      color: #1a73e8;
+      text-decoration: none;
+    }
+
+    /* Responsive Design */
+    @media screen and (max-width: 768px) {
+      .email-container {
+        width: 95%;
+      }
+    }
+
+    /* Dark Mode */
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #121212;
+        color: #e0e0e0;
+      }
+      .email-container {
+        background-color: #1e1e1e;
+        border: 1px solid #333333;
+      }
+      .email-header {
+        background-color: #1a73e8;
+      }
+      .email-button {
+        background-color: #1a73e8;
+        color: #ffffff;
+        cursor: pointer;
+      }
+      .email-footer {
+        background-color: #292929;
+        color: #aaaaaa;
+      }
+    }
+  </style>
 </head>
-<body style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f7fc;">
-  <div style="min-height: 85vh; max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; border: 1px solid #e1e4e8; display: flex; flex-direction: column; justify-content: space-between;">
+<body>
+  <div class="email-container">
     <!-- Header -->
-    <div style="text-align: center; padding: 20px; background-color: #b22222;">
-      <img src="[goodbye_image_url]" alt="Goodbye Image" style="max-width: 100%; height: auto;">
+    <div class="email-header">
+      <img src="cid:unique_inline_logo_cid" alt="SyntaxSpring Logo"> <h1 style="color: #FFFFFF; font-weight: bold;">Syntax Spring</h1>
     </div>
-    
+
     <!-- Main Content -->
-    <div style="padding: 20px; flex-grow: 1;">
-      <h1 style="color: #b22222; text-align: center;">We’re Sorry to See You Go</h1>
-      <p style="font-size: 16px; color: #333333; text-align: center;">
-        Your account has been successfully deleted. If this was a mistake, contact us immediately to recover your account.
+    <div class="email-content">
+      <h1 style="color: #1a73e8;">Logout Successful</h1>
+      <p class="logout-message">
+        Hi, [user_name]!
       </p>
-      <div style="text-align: center; margin: 20px;">
-        <a href="[support_link]" style="background-color: #b22222; color: #ffffff; text-decoration: none; padding: 12px 20px; font-size: 16px; border-radius: 5px;">Contact Support</a>
-      </div>
-      <p style="font-size: 14px; color: #666666; text-align: center;">
-        Thank you for being part of SyntaxSpring. We hope to see you again.
+      <p>
+        We wanted to let you know that your account has been successfully logged out from all devices. If you initiated this action, there's nothing else to worry about.
       </p>
+      <p>
+        If you did not log out and believe this was unauthorized, please take immediate action by securing your account.
+      </p>
+
+      <!-- Button -->
+      <a href="[account_security_link]" class="email-button">Secure Your Account</a>
+
+      <p style="font-size: 14px;">
+        If you have any issues or concerns, feel free to contact our support team. We are here to help.
+      </p>
+    </div>
+
+    <!-- Footer -->
+    <div class="email-footer">
+      <p>Need help or have questions? <a href="[support_link]">Contact our support team</a>.</p>
+      <p>We take your account security seriously and are here to assist you.</p>
     </div>
   </div>
 </body>
 </html>
 `;
-export { verificationEmailTemplate, welcomeEmailTemplate, accountDeleteEmailTemplate, accountLogoutEmailTemplate, passwordResetEmailTemplate, };
+const accountNotificationTemplate = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Activity Notification</title>
+  <style>
+    /* General Reset */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f7fc;
+      color: #333333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .email-container {
+      min-height: 85vh;
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #e1e4e8;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Header */
+    .email-header {
+      text-align: center;
+      padding: 20px;
+      background-color: #0073e6;
+    }
+
+    .email-header img {
+      max-width: 150px;
+    }
+
+    /* Main Content */
+    .email-content {
+      padding: 20px;
+      text-align: center;
+    }
+
+    .activity-message {
+      margin: 20px auto;
+      font-size: 20px;
+      color: #0073e6;
+    }
+
+    .email-button {
+      display: inline-block;
+      background-color: #0073e6;
+      color: #ffffff;
+      text-decoration: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      margin: 20px 0;
+    }
+
+    .email-footer {
+      background-color: #f9fafc;
+      padding: 10px;
+      text-align: center;
+      font-size: 14px;
+      color: #666666;
+    }
+
+    .email-footer a {
+      color: #0073e6;
+      text-decoration: none;
+    }
+
+    /* Responsive Design */
+    @media screen and (max-width: 768px) {
+      .email-container {
+        width: 95%;
+      }
+    }
+
+    /* Dark Mode */
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #121212;
+        color: #e0e0e0;
+      }
+      .email-container {
+        background-color: #1e1e1e;
+        border: 1px solid #333333;
+      }
+      .email-header {
+        background-color: #1a73e8;
+      }
+      .email-button {
+        background-color: #1a73e8;
+        color: #ffffff;
+        cursor: pointer;
+      }
+      .email-footer {
+        background-color: #292929;
+        color: #aaaaaa;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <!-- Header -->
+    <div class="email-header">
+      <img src="cid:unique_inline_logo_cid" alt="SyntaxSpring Logo"> <h1 style="color: #FFFFFF; font-weight: bold;">Syntax Spring</h1>
+    </div>
+
+    <!-- Main Content -->
+    <div class="email-content">
+      <h1 style="color: #0073e6;">Account Activity Notification</h1>
+      <p class="activity-message">
+        Hi, [user_name]!
+      </p>
+      <p>
+        We noticed some activity in your account recently. Below are the details of the action:
+      </p>
+
+      <!-- Activity Details -->
+      <p>
+        <strong>Activity:</strong> [activity_description]<br>
+        <strong>Time:</strong> [activity_time]<br>
+        <strong>Author:</strong> [activity_author]<br>
+      </p>
+
+      <!-- Button -->
+      <a href="[account_security_link]" class="email-button">Review Account Activity</a>
+
+      <p style="font-size: 14px;">
+        If you did not perform this action, please review your account activity and secure your account by changing your password.
+      </p>
+    </div>
+
+    <!-- Footer -->
+    <div class="email-footer">
+      <p>Need help or have questions? <a href="[support_link]">Contact our support team</a>.</p>
+      <p>Your security is our priority. We’re here to assist you with any concerns.</p>
+    </div>
+  </div>
+</body>
+</html>
+`;
+export { verificationEmailTemplate, welcomeEmailTemplate, accountDeleteEmailTemplate, accountLogoutEmailTemplate, passwordResetEmailTemplate, accountNotificationTemplate, };
 //# sourceMappingURL=emailTemplates.js.map

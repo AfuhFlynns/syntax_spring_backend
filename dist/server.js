@@ -13,6 +13,7 @@ import connectDB from "./utils/DB/connectDB.js";
 import allowedOrigins from "./utils/cors/corsOptions.js";
 import userRouter from "./routers/users.router.js";
 import challengesRouter from "./routers/challenges.router.js";
+import GeminiRouter from "./routers/gemini.router.js";
 connectDB();
 dotenv.config();
 const PORT = Number(process.env.PORT) | 8000;
@@ -41,9 +42,11 @@ app.get("/", (req, res) => {
         .json({ success: true, message: "Hello, from Syntax Spring api" });
 });
 // Listen to request from the users route
-app.use("/users", userRouter);
+app.use("/auth/users", userRouter);
 // Listen to requests from the challenges route
 app.use("/challenges", challengesRouter);
+// Listen to requests to ai
+app.use("/assist/ai/api", GeminiRouter);
 //ALERT: Listen for unknown urls
 app.get("*", (req, res) => {
     if (req.accepts("json")) {

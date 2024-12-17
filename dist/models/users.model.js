@@ -50,6 +50,17 @@ const usersChema = new Schema({
                 enum: ["access", "refresh", "resetPassword"],
             },
             token: String,
+            expiresAt: Date,
+        },
+    ],
+    codes: [
+        {
+            type: {
+                type: String,
+                enum: ["verification", "coupon"],
+            },
+            code: String,
+            expiresAt: Date,
         },
     ],
     achievements: [{ type: String }],
