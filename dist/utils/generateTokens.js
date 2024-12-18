@@ -11,12 +11,12 @@ import jwt from "jsonwebtoken";
 import { config } from "dotenv";
 // Load env vars
 config();
-const generateTokens = (res, email, username, id) => __awaiter(void 0, void 0, void 0, function* () {
+const generateTokens = (res, email, username, id, userRole) => __awaiter(void 0, void 0, void 0, function* () {
     const privateAccessKey = process.env.ACCESS_TOKEN_SECRET;
     if (!privateAccessKey) {
         throw new Error("ACCESS_TOKEN_SECRET is not defined in the environment variables.");
     }
-    const accessToken = jwt.sign({ email: email, username: username, id: id }, privateAccessKey, { algorithm: "HS256", expiresIn: "30d" });
+    const accessToken = jwt.sign({ email: email, username: username, id: id, userRole: userRole }, privateAccessKey, { algorithm: "HS256", expiresIn: "30d" });
     const dateNow = Date.now() + 720 * 60 * 60 * 1000;
     const expiresAt = new Date(dateNow);
     res.cookie("accessToken", accessToken, {

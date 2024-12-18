@@ -29,7 +29,7 @@ const signUpUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             $or: [{ email: email }, { username: username }],
         });
         if (foundUser)
-            return res.status(400).json({
+            return res.status(409).json({
                 success: false,
                 message: "User email or username already exists",
             });
@@ -99,7 +99,7 @@ const logInUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 message: "Invalid credentials",
             });
         //Generate access otkens and send cookie
-        const { accessToken, expiresAt } = yield generateTokens(res, String(foundUser === null || foundUser === void 0 ? void 0 : foundUser.email), String(foundUser === null || foundUser === void 0 ? void 0 : foundUser.username), String(foundUser === null || foundUser === void 0 ? void 0 : foundUser._id));
+        const { accessToken, expiresAt } = yield generateTokens(res, String(foundUser === null || foundUser === void 0 ? void 0 : foundUser.email), String(foundUser === null || foundUser === void 0 ? void 0 : foundUser.username), String(foundUser === null || foundUser === void 0 ? void 0 : foundUser._id), String(foundUser === null || foundUser === void 0 ? void 0 : foundUser.role));
         // Rearrange user data tokens
         foundUser.tokens = [
             ...(foundUser.tokens || []),
@@ -109,9 +109,11 @@ const logInUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         yield sendNotificationEmail(`Login into account, ${foundUser === null || foundUser === void 0 ? void 0 : foundUser.email}`, foundUser === null || foundUser === void 0 ? void 0 : foundUser.email, foundUser === null || foundUser === void 0 ? void 0 : foundUser.username, (_a = foundUser === null || foundUser === void 0 ? void 0 : foundUser.updatedAt) === null || _a === void 0 ? void 0 : _a.toLocaleDateString(), foundUser === null || foundUser === void 0 ? void 0 : foundUser.username, {
             "X-Category": "email_notification",
         });
+        const userObject = foundUser.toObject();
         return res.status(200).json({
             success: true,
             message: `User ${foundUser === null || foundUser === void 0 ? void 0 : foundUser.username} logged in successfully`,
+            user: Object.assign(Object.assign({}, userObject), { password: "" }),
         });
     }
     catch (error) {
@@ -322,5 +324,39 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         res.status(500).json({ success: false, message: error.message });
     }
 });
-export { signUpUser, logInUser, verifyUser, logOutUser, forgotPassword, resetPassword, deleteUser, };
+const getUserData = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const { username, email, id } = req;
+    const accessToken = (_a = req.cookies) === null || _a === void 0 ? void 0 : _a.accessToken;
+    try {
+        // Check if user has logged in
+        const foundUser = yield User.findOne({
+            username: username,
+            email: email,
+            _id: id,
+            tokens: {
+                $elemMatch: {
+                    type: "access",
+                    token: accessToken,
+                    expiresAt: { $gt: new Date() },
+                },
+            },
+        });
+        if (!foundUser)
+            return res.status(401).json({
+                success: false,
+                message: "User not found",
+            }); // Clear cookie
+        const userObject = foundUser.toObject();
+        return res.status(200).json({
+            success: true,
+            message: `Hi, ${foundUser === null || foundUser === void 0 ? void 0 : foundUser.username}. Welcome to Syntax Spring!`,
+            user: Object.assign(Object.assign({}, userObject), { password: "" }),
+        });
+    }
+    catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+export { signUpUser, logInUser, verifyUser, logOutUser, forgotPassword, resetPassword, deleteUser, getUserData, };
 //# sourceMappingURL=users.controller.js.map

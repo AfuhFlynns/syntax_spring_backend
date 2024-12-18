@@ -2,7 +2,7 @@ import pingAI from "../controllers/gemini.controller.js";
 import { Router, Request, Response } from "express";
 
 const GeminiRouter = Router();
-GeminiRouter.post("/", async (req: Request, res: Response) => {
+GeminiRouter.post("/ai", async (req: Request, res: Response) => {
   try {
     pingAI(req, res);
   } catch (error) {

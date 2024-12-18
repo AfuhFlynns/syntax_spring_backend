@@ -1,4 +1,5 @@
 import { Schema, Document } from "mongoose";
+import { Request } from "express";
 
 export interface usersSchemaTypes extends Document {
   username: string;
@@ -59,4 +60,11 @@ export interface challengesTypes {
   tags: {
     tag: string;
   }[];
+}
+
+export interface CustomRequest extends Request {
+  id?: string;
+  email?: string;
+  username?: string;
+  role?: string;
 }

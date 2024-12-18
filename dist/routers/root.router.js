@@ -8,25 +8,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { Router } from "express";
-import { createChallenges, getAllChallenges, } from "../controllers/challenges.controller.js";
-const challengesRouter = Router();
-challengesRouter.get("/all", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+import { getUserData } from "../controllers/users.controller.js";
+import verifyTokens from "../middlewares/verifyTokens.js";
+const rootRouter = Router();
+rootRouter.get("/", verifyTokens, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield getAllChallenges(req, res);
+        yield getUserData(req, res);
     }
     catch (error) {
         console.error("Error in sign-up route:", error);
         res.status(500).json({ error: "Internal server error" });
     }
 }));
-challengesRouter.post("/new-challenge", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        yield createChallenges(req, res);
-    }
-    catch (error) {
-        console.error("Error in sign-up route:", error);
-        res.status(500).json({ error: "Internal server error" });
-    }
-}));
-export default challengesRouter;
-//# sourceMappingURL=challenges.router.js.map
+export default rootRouter;
+//# sourceMappingURL=root.router.js.map

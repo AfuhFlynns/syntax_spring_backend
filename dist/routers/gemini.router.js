@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import pingAI from "../controllers/gemini.controller.js";
 import { Router } from "express";
 const GeminiRouter = Router();
-GeminiRouter.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+GeminiRouter.post("/ai", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         pingAI(req, res);
     }

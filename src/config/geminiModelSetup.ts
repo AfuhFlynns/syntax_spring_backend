@@ -5,7 +5,7 @@ import { config } from "dotenv";
 config();
 
 const genAI = new GoogleGenerativeAI(String(process.env.GOOGLE_GEMINI_API_KEY));
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
 const callAIEndPoint = async (
   title: string,
@@ -15,9 +15,9 @@ const callAIEndPoint = async (
 ): Promise<string> => {
   let result = "";
   try {
-    const aiResponse = await model.generateContent(
-      `Based on this question title: ${title} and description: ${description}, Go through this code: ${initialCode}, compare with this solution: ${solution}\nAnd then help me with a hint or linting on how to solve the problem such that my code ${initialCode} is the same as the solution. \nDon't give any direct answer. Just hint me so that I can learn. Make the response short and consise (max 5 lines but good enought to help)`
-    );
+    const data = `Your name is SyntaxSpring Assistant bot.\nStart by greeting the user, tell them your name is SyntaxSpring Assistant bot. And then\nBased on this question title: ${title} and description: ${description}, Go through this code: ${initialCode}, compare with this solution: ${solution}\nAnd then help me with a hint or linting on how to solve the problem such that my code ${initialCode} is the same as the solution. \nDon't give any direct answer. Just hint me so that I can learn. Make the response short and consise (max 6 lines but good enought to help)`;
+
+    const aiResponse = await model.generateContent(data);
     result = String(aiResponse.response.text());
   } catch (error: any | { message: string }) {
     console.error(error.message);

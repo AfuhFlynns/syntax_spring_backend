@@ -16,6 +16,8 @@ import allowedOrigins from "./utils/cors/corsOptions.js";
 import userRouter from "./routers/users.router.js";
 import challengesRouter from "./routers/challenges.router.js";
 import GeminiRouter from "./routers/gemini.router.js";
+import verifyTokens from "./middlewares/verifyTokens.js";
+import rootRouter from "./routers/root.router.js";
 
 connectDB();
 
@@ -28,11 +30,11 @@ const app = express();
 app.use(morgan("dev"));
 app.use(
   cors({
-    origin: (origin, callback) => {
+    origin: function (origin, callback) {
       if (allowedOrigins.indexOf(String(origin)) !== -1 || !origin) {
         callback(null, true);
       } else {
-        callback(new Error("Error. Not allowed by cors"));
+        callback(new Error("Not allowed by CORS"));
       }
     },
     optionsSuccessStatus: 200,
@@ -45,20 +47,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json()); // Accept json parsing
 
-app.get("/", (req: Request, res: Response) => {
-  res
-    .status(200)
-    .json({ success: true, message: "Hello, from Syntax Spring api" });
-});
+app.use("/", rootRouter);
 
 // Listen to request from the users route
 app.use("/auth/users", userRouter);
 
 // Listen to requests from the challenges route
-app.use("/challenges", challengesRouter);
+app.use("/challenges/api/v1", verifyTokens, challengesRouter);
 
 // Listen to requests to ai
-app.use("/assist/ai/api", GeminiRouter);
+app.use("/assist/api/v1", verifyTokens, GeminiRouter);
 
 //ALERT: Listen for unknown urls
 app.get("*", (req: Request, res: Response) => {

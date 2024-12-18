@@ -15,6 +15,7 @@ import {
 import { config } from "dotenv";
 import generateTokens from "../utils/generateTokens.js";
 import generateResetToken from "../utils/generateResetToken.js";
+import { CustomRequest } from "../TYPES.js";
 
 // Load env vars
 config();
@@ -32,7 +33,7 @@ const signUpUser = async (req: Request, res: Response) => {
       $or: [{ email: email }, { username: username }],
     });
     if (foundUser)
-      return res.status(400).json({
+      return res.status(409).json({
         success: false,
         message: "User email or username already exists",
       });
@@ -113,7 +114,8 @@ const logInUser = async (req: Request, res: Response) => {
       res,
       String(foundUser?.email),
       String(foundUser?.username),
-      String(foundUser?._id)
+      String(foundUser?._id),
+      String(foundUser?.role)
     );
     // Rearrange user data tokens
     foundUser.tokens = [
@@ -133,10 +135,12 @@ const logInUser = async (req: Request, res: Response) => {
         "X-Category": "email_notification",
       }
     );
+    const userObject = foundUser.toObject();
 
     return res.status(200).json({
       success: true,
       message: `User ${foundUser?.username} logged in successfully`,
+      user: { ...userObject, password: "" },
     });
   } catch (error: any | { message: string }) {
     res.status(500).json({ success: false, message: error.message });
@@ -365,6 +369,42 @@ const deleteUser = async (req: Request, res: Response) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+const getUserData = async (req: CustomRequest, res: Response) => {
+  const { username, email, id } = req;
+  const accessToken = req.cookies?.accessToken;
+  try {
+    // Check if user has logged in
+    const foundUser = await User.findOne({
+      username: username,
+      email: email,
+      _id: id,
+      tokens: {
+        $elemMatch: {
+          type: "access",
+          token: accessToken,
+          expiresAt: { $gt: new Date() },
+        },
+      },
+    });
+    if (!foundUser)
+      return res.status(401).json({
+        success: false,
+        message: "User not found",
+      }); // Clear cookie
+
+    const userObject = foundUser.toObject();
+    return res.status(200).json({
+      success: true,
+      message: `Hi, ${foundUser?.username}. Welcome to Syntax Spring!`,
+      user: {
+        ...userObject,
+        password: "",
+      },
+    });
+  } catch (error: any | { message: string }) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
 
 export {
   signUpUser,
@@ -374,4 +414,5 @@ export {
   forgotPassword,
   resetPassword,
   deleteUser,
+  getUserData,
 };

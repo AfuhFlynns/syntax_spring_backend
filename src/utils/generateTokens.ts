@@ -9,7 +9,8 @@ const generateTokens = async (
   res: Response,
   email: string,
   username: string,
-  id: string
+  id: string,
+  userRole: string
 ): Promise<{ accessToken: string; expiresAt: Date }> => {
   const privateAccessKey: string | undefined = process.env.ACCESS_TOKEN_SECRET;
 
@@ -20,7 +21,7 @@ const generateTokens = async (
   }
 
   const accessToken = jwt.sign(
-    { email: email, username: username, id: id },
+    { email: email, username: username, id: id, userRole: userRole },
     privateAccessKey,
     { algorithm: "HS256", expiresIn: "30d" }
   );

@@ -21,7 +21,7 @@ const getAllChallenges = (req, res) => __awaiter(void 0, void 0, void 0, functio
         if (!foundChallenges || foundChallenges.length === 0) {
             return res
                 .status(202)
-                .json({ success: false, message: "No challenges available yet!" });
+                .json({ success: false, message: "No challenges found!" });
         }
         console.clear();
         // console.table(foundChallenges.length);

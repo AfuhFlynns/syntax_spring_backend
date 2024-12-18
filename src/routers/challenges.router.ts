@@ -6,7 +6,7 @@ import {
 
 const challengesRouter = Router();
 
-challengesRouter.get("/api/all", async (req: Request, res: Response) => {
+challengesRouter.get("/all", async (req: Request, res: Response) => {
   try {
     await getAllChallenges(req, res);
   } catch (error) {
@@ -14,16 +14,13 @@ challengesRouter.get("/api/all", async (req: Request, res: Response) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-challengesRouter.post(
-  "/api/new-challenge",
-  async (req: Request, res: Response) => {
-    try {
-      await createChallenges(req, res);
-    } catch (error) {
-      console.error("Error in sign-up route:", error);
-      res.status(500).json({ error: "Internal server error" });
-    }
+challengesRouter.post("/new-challenge", async (req: Request, res: Response) => {
+  try {
+    await createChallenges(req, res);
+  } catch (error) {
+    console.error("Error in sign-up route:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
-);
+});
 
 export default challengesRouter;
