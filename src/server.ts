@@ -71,4 +71,5 @@ app.get("*", (req: Request, res: Response) => {
 
 mongoose.connection.once("open", () => {
   app.listen(PORT, () => console.log(`App is running on port: ${PORT}`));
+  console.clear(); // Clear the console once the app starts running
 });

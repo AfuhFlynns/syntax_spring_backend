@@ -100,7 +100,7 @@ const logInUser = async (req: Request, res: Response) => {
         message: "User email or username does not exist",
       });
 
-    const hashedPwd = String(foundUser?.password);
+    const hashedPwd = foundUser.password;
     const userMatch = await bcrypt.compare(password, hashedPwd);
 
     if (!userMatch)
@@ -123,14 +123,14 @@ const logInUser = async (req: Request, res: Response) => {
       { type: "access", token: accessToken, expiresAt: expiresAt },
     ];
 
-    await foundUser?.save();
+    await foundUser.save();
 
     await sendNotificationEmail(
-      `Login into account, ${foundUser?.email}`,
-      foundUser?.email,
-      foundUser?.username,
-      foundUser?.updatedAt?.toLocaleDateString(),
-      foundUser?.username,
+      `Login into account, ${foundUser.email}`,
+      foundUser.email,
+      foundUser.username,
+      foundUser.updatedAt?.toLocaleDateString(),
+      foundUser.username,
       {
         "X-Category": "email_notification",
       }
@@ -139,7 +139,7 @@ const logInUser = async (req: Request, res: Response) => {
 
     return res.status(200).json({
       success: true,
-      message: `User ${foundUser?.username} logged in successfully`,
+      message: `User ${foundUser.username} logged in successfully`,
       user: { ...userObject, password: "" },
     });
   } catch (error: any | { message: string }) {
@@ -175,15 +175,15 @@ const verifyUser = async (req: Request, res: Response) => {
     //Delete verification code
     foundUser.codes = [];
     //Save data
-    await foundUser?.save();
+    await foundUser.save();
 
-    await sendWelcomeEmail(foundUser?.email, foundUser?.username, {
+    await sendWelcomeEmail(foundUser.email, foundUser.username, {
       "X-Category": "email welcome",
     });
 
     return res.status(200).json({
       success: true,
-      message: `User ${foundUser?.username} verified successfully`,
+      message: `User ${foundUser.username} verified successfully`,
     });
 
     // Save new data
@@ -192,7 +192,7 @@ const verifyUser = async (req: Request, res: Response) => {
   }
 };
 const logOutUser = async (req: Request, res: Response) => {
-  const accessToken = req.headers.cookie; // Get the stored access token
+  const accessToken = req.cookies?.accessToken; // Get the stored access token
   // console.log(accessToken);
   try {
     // Check if user has logged in
@@ -204,7 +204,7 @@ const logOutUser = async (req: Request, res: Response) => {
       tokens: {
         $elemMatch: {
           type: "access",
-          token: accessToken.replace("accessToken=", "").trim(),
+          token: accessToken,
           expiresAt: { $gt: new Date() },
         },
       },
@@ -217,13 +217,13 @@ const logOutUser = async (req: Request, res: Response) => {
       });
     foundUser.tokens = [];
     await foundUser.save();
-    await sendLogoutEmail(foundUser?.email, foundUser?.username, {
+    await sendLogoutEmail(foundUser.email, foundUser.username, {
       "X-Category": "email logout",
     });
     res.clearCookie("accesstoken"); // Clear stored cookie
     res.status(200).json({
       success: true,
-      message: `User ${foundUser?.username} Logged out successfully`,
+      message: `User ${foundUser.username} Logged out successfully`,
     });
   } catch (error: any | { message: string }) {
     res.status(500).json({ success: false, message: error.message });
@@ -304,7 +304,7 @@ const resetPassword = async (req: Request, res: Response) => {
     await foundUser.save();
 
     await sendNotificationEmail(
-      `Password Reset for user: ${foundUser?.email}`,
+      `Password Reset for user: ${foundUser.email}`,
       foundUser?.email,
       foundUser?.username,
       foundUser?.updatedAt?.toLocaleDateString(),
@@ -324,13 +324,13 @@ const resetPassword = async (req: Request, res: Response) => {
 };
 const deleteUser = async (req: Request, res: Response) => {
   const { password, username } = req.body;
-  const token = req.headers.cookie;
+  const accessToken = req.cookies?.accessToken; // Read accessToken from cookie
   try {
     const userData = {
       tokens: {
         $elemMatch: {
           type: "access",
-          token: token?.replace("accessToken=", "").trim(),
+          token: accessToken,
           expiresAt: { $gt: new Date() },
         },
       },
@@ -341,21 +341,25 @@ const deleteUser = async (req: Request, res: Response) => {
       return res
         .status(401)
         .json({ success: false, message: "Must provide a password" });
+    //Search for user
     const foundUser = await User.findOne(userData);
-    const matchUser = bcrypt.compare(password, String(foundUser?.password));
-    if (!foundUser && !matchUser)
+    // Check username and tokens
+    if (!foundUser)
       return res.status(400).json({
         success: false,
         message: "Can't delete account at the moment",
       });
 
-    await sendAccountDeleteEmail(
-      String(foundUser?.email),
-      String(foundUser?.username),
-      {
-        "X-Category": "email deletion",
-      }
-    );
+    const matchUser = bcrypt.compare(password, foundUser.password);
+    // Check password
+    if (!matchUser)
+      return res.status(401).json({
+        success: false,
+        message: "Can't delete account at the moment",
+      });
+    await sendAccountDeleteEmail(foundUser.email, foundUser.username, {
+      "X-Category": "email deletion",
+    });
     // Delete account
     await User.deleteOne(userData);
 
@@ -363,7 +367,7 @@ const deleteUser = async (req: Request, res: Response) => {
 
     return res.status(200).json({
       success: true,
-      message: `User ${foundUser?.username} account deletion complete`,
+      message: `User ${foundUser.username} account deletion complete`,
     });
   } catch (error: any | { message: string }) {
     res.status(500).json({ success: false, message: error.message });
@@ -395,7 +399,7 @@ const getUserData = async (req: CustomRequest, res: Response) => {
     const userObject = foundUser.toObject();
     return res.status(200).json({
       success: true,
-      message: `Hi, ${foundUser?.username}. Welcome to Syntax Spring!`,
+      message: `Hi, ${foundUser.username}. Welcome to Syntax Spring!`,
       user: {
         ...userObject,
         password: "",

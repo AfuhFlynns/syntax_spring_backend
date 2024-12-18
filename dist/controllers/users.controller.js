@@ -91,7 +91,7 @@ const logInUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 success: false,
                 message: "User email or username does not exist",
             });
-        const hashedPwd = String(foundUser === null || foundUser === void 0 ? void 0 : foundUser.password);
+        const hashedPwd = foundUser.password;
         const userMatch = yield bcrypt.compare(password, hashedPwd);
         if (!userMatch)
             return res.status(400).json({
@@ -105,14 +105,14 @@ const logInUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             ...(foundUser.tokens || []),
             { type: "access", token: accessToken, expiresAt: expiresAt },
         ];
-        yield (foundUser === null || foundUser === void 0 ? void 0 : foundUser.save());
-        yield sendNotificationEmail(`Login into account, ${foundUser === null || foundUser === void 0 ? void 0 : foundUser.email}`, foundUser === null || foundUser === void 0 ? void 0 : foundUser.email, foundUser === null || foundUser === void 0 ? void 0 : foundUser.username, (_a = foundUser === null || foundUser === void 0 ? void 0 : foundUser.updatedAt) === null || _a === void 0 ? void 0 : _a.toLocaleDateString(), foundUser === null || foundUser === void 0 ? void 0 : foundUser.username, {
+        yield foundUser.save();
+        yield sendNotificationEmail(`Login into account, ${foundUser.email}`, foundUser.email, foundUser.username, (_a = foundUser.updatedAt) === null || _a === void 0 ? void 0 : _a.toLocaleDateString(), foundUser.username, {
             "X-Category": "email_notification",
         });
         const userObject = foundUser.toObject();
         return res.status(200).json({
             success: true,
-            message: `User ${foundUser === null || foundUser === void 0 ? void 0 : foundUser.username} logged in successfully`,
+            message: `User ${foundUser.username} logged in successfully`,
             user: Object.assign(Object.assign({}, userObject), { password: "" }),
         });
     }
@@ -148,13 +148,13 @@ const verifyUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         //Delete verification code
         foundUser.codes = [];
         //Save data
-        yield (foundUser === null || foundUser === void 0 ? void 0 : foundUser.save());
-        yield sendWelcomeEmail(foundUser === null || foundUser === void 0 ? void 0 : foundUser.email, foundUser === null || foundUser === void 0 ? void 0 : foundUser.username, {
+        yield foundUser.save();
+        yield sendWelcomeEmail(foundUser.email, foundUser.username, {
             "X-Category": "email welcome",
         });
         return res.status(200).json({
             success: true,
-            message: `User ${foundUser === null || foundUser === void 0 ? void 0 : foundUser.username} verified successfully`,
+            message: `User ${foundUser.username} verified successfully`,
         });
         // Save new data
     }
@@ -163,7 +163,8 @@ const verifyUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 const logOutUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const accessToken = req.headers.cookie; // Get the stored access token
+    var _a;
+    const accessToken = (_a = req.cookies) === null || _a === void 0 ? void 0 : _a.accessToken; // Get the stored access token
     // console.log(accessToken);
     try {
         // Check if user has logged in
@@ -175,7 +176,7 @@ const logOutUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             tokens: {
                 $elemMatch: {
                     type: "access",
-                    token: accessToken.replace("accessToken=", "").trim(),
+                    token: accessToken,
                     expiresAt: { $gt: new Date() },
                 },
             },
@@ -188,13 +189,13 @@ const logOutUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             });
         foundUser.tokens = [];
         yield foundUser.save();
-        yield sendLogoutEmail(foundUser === null || foundUser === void 0 ? void 0 : foundUser.email, foundUser === null || foundUser === void 0 ? void 0 : foundUser.username, {
+        yield sendLogoutEmail(foundUser.email, foundUser.username, {
             "X-Category": "email logout",
         });
         res.clearCookie("accesstoken"); // Clear stored cookie
         res.status(200).json({
             success: true,
-            message: `User ${foundUser === null || foundUser === void 0 ? void 0 : foundUser.username} Logged out successfully`,
+            message: `User ${foundUser.username} Logged out successfully`,
         });
     }
     catch (error) {
@@ -271,7 +272,7 @@ const resetPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         foundUser.tokens = [];
         // Save new data
         yield foundUser.save();
-        yield sendNotificationEmail(`Password Reset for user: ${foundUser === null || foundUser === void 0 ? void 0 : foundUser.email}`, foundUser === null || foundUser === void 0 ? void 0 : foundUser.email, foundUser === null || foundUser === void 0 ? void 0 : foundUser.username, (_a = foundUser === null || foundUser === void 0 ? void 0 : foundUser.updatedAt) === null || _a === void 0 ? void 0 : _a.toLocaleDateString(), foundUser === null || foundUser === void 0 ? void 0 : foundUser.username, {
+        yield sendNotificationEmail(`Password Reset for user: ${foundUser.email}`, foundUser === null || foundUser === void 0 ? void 0 : foundUser.email, foundUser === null || foundUser === void 0 ? void 0 : foundUser.username, (_a = foundUser === null || foundUser === void 0 ? void 0 : foundUser.updatedAt) === null || _a === void 0 ? void 0 : _a.toLocaleDateString(), foundUser === null || foundUser === void 0 ? void 0 : foundUser.username, {
             "X-Category": "email notification",
         });
         return res.status(200).json({
@@ -284,14 +285,15 @@ const resetPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const { password, username } = req.body;
-    const token = req.headers.cookie;
+    const accessToken = (_a = req.cookies) === null || _a === void 0 ? void 0 : _a.accessToken; // Read accessToken from cookie
     try {
         const userData = {
             tokens: {
                 $elemMatch: {
                     type: "access",
-                    token: token === null || token === void 0 ? void 0 : token.replace("accessToken=", "").trim(),
+                    token: accessToken,
                     expiresAt: { $gt: new Date() },
                 },
             },
@@ -302,14 +304,22 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             return res
                 .status(401)
                 .json({ success: false, message: "Must provide a password" });
+        //Search for user
         const foundUser = yield User.findOne(userData);
-        const matchUser = bcrypt.compare(password, String(foundUser === null || foundUser === void 0 ? void 0 : foundUser.password));
-        if (!foundUser && !matchUser)
+        // Check username and tokens
+        if (!foundUser)
             return res.status(400).json({
                 success: false,
                 message: "Can't delete account at the moment",
             });
-        yield sendAccountDeleteEmail(String(foundUser === null || foundUser === void 0 ? void 0 : foundUser.email), String(foundUser === null || foundUser === void 0 ? void 0 : foundUser.username), {
+        const matchUser = bcrypt.compare(password, foundUser.password);
+        // Check password
+        if (!matchUser)
+            return res.status(401).json({
+                success: false,
+                message: "Can't delete account at the moment",
+            });
+        yield sendAccountDeleteEmail(foundUser.email, foundUser.username, {
             "X-Category": "email deletion",
         });
         // Delete account
@@ -317,7 +327,7 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         res.clearCookie("accessToken"); // Clear cookie
         return res.status(200).json({
             success: true,
-            message: `User ${foundUser === null || foundUser === void 0 ? void 0 : foundUser.username} account deletion complete`,
+            message: `User ${foundUser.username} account deletion complete`,
         });
     }
     catch (error) {
@@ -350,7 +360,7 @@ const getUserData = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         const userObject = foundUser.toObject();
         return res.status(200).json({
             success: true,
-            message: `Hi, ${foundUser === null || foundUser === void 0 ? void 0 : foundUser.username}. Welcome to Syntax Spring!`,
+            message: `Hi, ${foundUser.username}. Welcome to Syntax Spring!`,
             user: Object.assign(Object.assign({}, userObject), { password: "" }),
         });
     }

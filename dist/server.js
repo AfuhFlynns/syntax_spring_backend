@@ -59,5 +59,6 @@ app.get("*", (req, res) => {
 });
 mongoose.connection.once("open", () => {
     app.listen(PORT, () => console.log(`App is running on port: ${PORT}`));
+    console.clear(); // Clear the console once the app starts running
 });
 //# sourceMappingURL=server.js.map
