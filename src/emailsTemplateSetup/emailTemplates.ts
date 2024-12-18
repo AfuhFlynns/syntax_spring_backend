@@ -154,7 +154,7 @@ const verificationEmailTemplate: string = `<!DOCTYPE html>
 
     <!-- Footer -->
     <div class="email-footer">
-      <p>Need help? <a href="[support_link]" style="cursor: pointer;">Contact our support team</a>.</p>
+      <p>Need help? <a href="mailto:flyinnsafuh@gmail.com" style="cursor: pointer;">Contact our support team</a>.</p>
     </div>
   </div>
 </body>
@@ -301,7 +301,7 @@ const welcomeEmailTemplate = `<!DOCTYPE html>
 
     <!-- Footer -->
     <div class="email-footer">
-      <p>Have a question? <a href="[support_link]">Contact our support team</a>.</p>
+      <p>Have a question? <a href="mailto:flyinnsafuh@gmail.com">Contact our support team</a>.</p>
       <p>Enjoy your experience with SyntaxSpring!</p>
     </div>
   </div>
@@ -449,7 +449,7 @@ const passwordResetEmailTemplate = `<!DOCTYPE html>
 
     <!-- Footer -->
     <div class="email-footer">
-      <p>Need help? <a href="[support_link]">Contact our support team</a>.</p>
+      <p>Need help? <a href="mailto:flyinnsafuh@gmail.com">Contact our support team</a>.</p>
       <p>Stay safe and secure with SyntaxSpring!</p>
     </div>
   </div>
@@ -596,7 +596,7 @@ const accountDeleteEmailTemplate = `<!DOCTYPE html>
 
     <!-- Footer -->
     <div class="email-footer">
-      <p>Need help or have questions? <a href="[support_link]">Contact our support team</a>.</p>
+      <p>Need help or have questions? <a href="mailto:flyinnsafuh@gmail.com">Contact our support team</a>.</p>
       <p>We hope to see you again at SyntaxSpring!</p>
     </div>
   </div>
@@ -743,7 +743,7 @@ const accountLogoutEmailTemplate = `<!DOCTYPE html>
 
     <!-- Footer -->
     <div class="email-footer">
-      <p>Need help or have questions? <a href="[support_link]">Contact our support team</a>.</p>
+      <p>Need help or have questions? <a href="mailto:flyinnsafuh@gmail.com">Contact our support team</a>.</p>
       <p>We take your account security seriously and are here to assist you.</p>
     </div>
   </div>
@@ -894,7 +894,7 @@ const accountNotificationTemplate = `<!DOCTYPE html>
 
     <!-- Footer -->
     <div class="email-footer">
-      <p>Need help or have questions? <a href="[support_link]">Contact our support team</a>.</p>
+      <p>Need help or have questions? <a href="mailto:flyinnsafuh@gmail.com">Contact our support team</a>.</p>
       <p>Your security is our priority. We’re here to assist you with any concerns.</p>
     </div>
   </div>

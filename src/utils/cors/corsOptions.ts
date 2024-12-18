@@ -1,7 +1,7 @@
-const allowedOrigins = [
-  "http://localhost:5173",
-  "http://192.168.100.100:5172",
-  "http://localhost:8000",
-];
+import { config } from "dotenv";
+
+config();
+
+const allowedOrigins = ["http://localhost:5000", "http://192.168.92.182:5000"];
 
 export default allowedOrigins;

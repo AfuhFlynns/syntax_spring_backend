@@ -122,6 +122,7 @@ const logInUser = async (req: Request, res: Response) => {
       ...(foundUser.tokens || []),
       { type: "access", token: accessToken, expiresAt: expiresAt },
     ];
+    foundUser.isActive = true; // Deactivate account
 
     await foundUser.save();
 
@@ -129,18 +130,16 @@ const logInUser = async (req: Request, res: Response) => {
       `Login into account, ${foundUser.email}`,
       foundUser.email,
       foundUser.username,
-      foundUser.updatedAt?.toLocaleDateString(),
+      foundUser.updatedAt.toLocaleDateString(),
       foundUser.username,
       {
         "X-Category": "email_notification",
       }
     );
-    const userObject = foundUser.toObject();
 
     return res.status(200).json({
       success: true,
       message: `User ${foundUser.username} logged in successfully`,
-      user: { ...userObject, password: "" },
     });
   } catch (error: any | { message: string }) {
     res.status(500).json({ success: false, message: error.message });
@@ -178,7 +177,7 @@ const verifyUser = async (req: Request, res: Response) => {
     await foundUser.save();
 
     await sendWelcomeEmail(foundUser.email, foundUser.username, {
-      "X-Category": "email welcome",
+      "X-Category": "email_welcome",
     });
 
     return res.status(200).json({
@@ -216,9 +215,10 @@ const logOutUser = async (req: Request, res: Response) => {
         message: "No user found. Try logging in again",
       });
     foundUser.tokens = [];
+    foundUser.isActive = false; // Deactivate account
     await foundUser.save();
     await sendLogoutEmail(foundUser.email, foundUser.username, {
-      "X-Category": "email logout",
+      "X-Category": "email_logout",
     });
     res.clearCookie("accesstoken"); // Clear stored cookie
     res.status(200).json({
@@ -261,7 +261,7 @@ const forgotPassword = async (req: Request, res: Response) => {
       foundUser?.username,
       `${clientUrl}/reset-password/${resetToken}`,
       {
-        "X-Category": "email password reset",
+        "X-Category": "email_password_reset",
       }
     );
     res.status(200).json({
@@ -300,6 +300,7 @@ const resetPassword = async (req: Request, res: Response) => {
     //Update user data
     foundUser.password = hashedPwd;
     foundUser.tokens = [];
+    foundUser.isActive = false; // Deactivate account
     // Save new data
     await foundUser.save();
 
@@ -310,7 +311,7 @@ const resetPassword = async (req: Request, res: Response) => {
       foundUser?.updatedAt?.toLocaleDateString(),
       foundUser?.username,
       {
-        "X-Category": "email notification",
+        "X-Category": "email_notification",
       }
     );
 
@@ -358,7 +359,7 @@ const deleteUser = async (req: Request, res: Response) => {
         message: "Can't delete account at the moment",
       });
     await sendAccountDeleteEmail(foundUser.email, foundUser.username, {
-      "X-Category": "email deletion",
+      "X-Category": "email_account_deletion",
     });
     // Delete account
     await User.deleteOne(userData);
@@ -389,7 +390,7 @@ const getUserData = async (req: CustomRequest, res: Response) => {
           expiresAt: { $gt: new Date() },
         },
       },
-    });
+    }).select("-password");
     if (!foundUser)
       return res.status(401).json({
         success: false,
@@ -400,10 +401,7 @@ const getUserData = async (req: CustomRequest, res: Response) => {
     return res.status(200).json({
       success: true,
       message: `Hi, ${foundUser.username}. Welcome to Syntax Spring!`,
-      user: {
-        ...userObject,
-        password: "",
-      },
+      user: userObject,
     });
   } catch (error: any | { message: string }) {
     res.status(500).json({ success: false, message: error.message });

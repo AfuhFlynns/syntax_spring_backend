@@ -10,8 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { Router } from "express";
 import { getUserData } from "../controllers/users.controller.js";
 import verifyTokens from "../middlewares/verifyTokens.js";
-const rootRouter = Router();
-rootRouter.get("/", verifyTokens, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const checkAuthRouter = Router();
+checkAuthRouter.get("/check-auth", verifyTokens, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield getUserData(req, res);
     }
@@ -20,5 +20,5 @@ rootRouter.get("/", verifyTokens, (req, res) => __awaiter(void 0, void 0, void 0
         res.status(500).json({ error: "Internal server error" });
     }
 }));
-export default rootRouter;
+export default checkAuthRouter;
 //# sourceMappingURL=root.router.js.map

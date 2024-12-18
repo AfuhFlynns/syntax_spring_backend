@@ -75,7 +75,6 @@ const signUpUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 const logInUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
     const { value, password } = req.body;
     try {
         // Check if all fields are filled
@@ -105,15 +104,14 @@ const logInUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             ...(foundUser.tokens || []),
             { type: "access", token: accessToken, expiresAt: expiresAt },
         ];
+        foundUser.isActive = true; // Deactivate account
         yield foundUser.save();
-        yield sendNotificationEmail(`Login into account, ${foundUser.email}`, foundUser.email, foundUser.username, (_a = foundUser.updatedAt) === null || _a === void 0 ? void 0 : _a.toLocaleDateString(), foundUser.username, {
+        yield sendNotificationEmail(`Login into account, ${foundUser.email}`, foundUser.email, foundUser.username, foundUser.updatedAt.toLocaleDateString(), foundUser.username, {
             "X-Category": "email_notification",
         });
-        const userObject = foundUser.toObject();
         return res.status(200).json({
             success: true,
             message: `User ${foundUser.username} logged in successfully`,
-            user: Object.assign(Object.assign({}, userObject), { password: "" }),
         });
     }
     catch (error) {
@@ -150,7 +148,7 @@ const verifyUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         //Save data
         yield foundUser.save();
         yield sendWelcomeEmail(foundUser.email, foundUser.username, {
-            "X-Category": "email welcome",
+            "X-Category": "email_welcome",
         });
         return res.status(200).json({
             success: true,
@@ -188,9 +186,10 @@ const logOutUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
                 message: "No user found. Try logging in again",
             });
         foundUser.tokens = [];
+        foundUser.isActive = false; // Deactivate account
         yield foundUser.save();
         yield sendLogoutEmail(foundUser.email, foundUser.username, {
-            "X-Category": "email logout",
+            "X-Category": "email_logout",
         });
         res.clearCookie("accesstoken"); // Clear stored cookie
         res.status(200).json({
@@ -230,7 +229,7 @@ const forgotPassword = (req, res) => __awaiter(void 0, void 0, void 0, function*
         // Save new data
         yield foundUser.save();
         yield sendPasswordResetEmail(foundUser === null || foundUser === void 0 ? void 0 : foundUser.email, foundUser === null || foundUser === void 0 ? void 0 : foundUser.username, `${clientUrl}/reset-password/${resetToken}`, {
-            "X-Category": "email password reset",
+            "X-Category": "email_password_reset",
         });
         res.status(200).json({
             success: true,
@@ -270,10 +269,11 @@ const resetPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         //Update user data
         foundUser.password = hashedPwd;
         foundUser.tokens = [];
+        foundUser.isActive = false; // Deactivate account
         // Save new data
         yield foundUser.save();
         yield sendNotificationEmail(`Password Reset for user: ${foundUser.email}`, foundUser === null || foundUser === void 0 ? void 0 : foundUser.email, foundUser === null || foundUser === void 0 ? void 0 : foundUser.username, (_a = foundUser === null || foundUser === void 0 ? void 0 : foundUser.updatedAt) === null || _a === void 0 ? void 0 : _a.toLocaleDateString(), foundUser === null || foundUser === void 0 ? void 0 : foundUser.username, {
-            "X-Category": "email notification",
+            "X-Category": "email_notification",
         });
         return res.status(200).json({
             success: true,
@@ -320,7 +320,7 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
                 message: "Can't delete account at the moment",
             });
         yield sendAccountDeleteEmail(foundUser.email, foundUser.username, {
-            "X-Category": "email deletion",
+            "X-Category": "email_account_deletion",
         });
         // Delete account
         yield User.deleteOne(userData);
@@ -351,7 +351,7 @@ const getUserData = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
                     expiresAt: { $gt: new Date() },
                 },
             },
-        });
+        }).select("-password");
         if (!foundUser)
             return res.status(401).json({
                 success: false,
@@ -361,7 +361,7 @@ const getUserData = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         return res.status(200).json({
             success: true,
             message: `Hi, ${foundUser.username}. Welcome to Syntax Spring!`,
-            user: Object.assign(Object.assign({}, userObject), { password: "" }),
+            user: userObject,
         });
     }
     catch (error) {

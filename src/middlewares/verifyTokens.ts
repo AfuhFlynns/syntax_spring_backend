@@ -27,12 +27,13 @@ const verifyTokens = async (
           expiresAt: { $gt: new Date() },
         },
       },
+      isActive: true,
     });
 
     if (!foundUser) {
       res.status(401).json({
         success: false,
-        message: "Please login into your account. Or create one",
+        message: "Please login and activate your account. Or create one",
       });
       return;
     }
@@ -45,7 +46,7 @@ const verifyTokens = async (
         if (error) {
           res.status(401).json({
             success: false,
-            message: "Login into your account. Or create one",
+            message: "Please login and activate your account. Or create one",
           });
           return;
         }

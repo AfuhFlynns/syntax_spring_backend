@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { challengesSchema } from "../models/challenges.model.js";
+import { CustomRequest } from "../TYPES.js";
 
 const getAllChallenges = async (req: Request, res: Response) => {
   const { type, difficulty } = req.query;
@@ -27,8 +28,9 @@ const getAllChallenges = async (req: Request, res: Response) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
-const createChallenges = async (req: Request, res: Response) => {
+const createChallenges = async (req: CustomRequest, res: Response) => {
   const { challenge } = req.body;
+  const role = req.role;
 
   try {
     if (!challenge)
@@ -36,18 +38,34 @@ const createChallenges = async (req: Request, res: Response) => {
         .status(401)
         .json({ success: false, message: "A challenge body must be provided" });
 
-    // Check if challenge already exist
-    // const foundChallenge = challengesSchema.findOne({title: challenge?.title});
-    // if(foundChallenge) return res.status(400).json({success: false, message: "Challenge already exist"});
-    const newChallenges = new challengesSchema(challenge);
-    const savedChallenges = await newChallenges.save();
+    //Authenticate users role
+    if (role !== "user") {
+      // Check if challenge already exist
+      const foundChallenge = challengesSchema.findOne({
+        title: challenge.title,
+      });
+      if (!foundChallenge) {
+        const newChallenges = new challengesSchema(challenge);
+        const savedChallenges = await newChallenges.save();
+        // GEt the document
+        const challengesObject = savedChallenges.toObject();
 
-    // GEt the document
-    const challengesObject = savedChallenges.toObject();
-
-    res.status(200).json({ success: true, challenges: challengesObject });
+        return res
+          .status(200)
+          .json({ success: true, challenges: challengesObject });
+      } else {
+        return res
+          .status(409)
+          .json({ success: false, message: "Challenge already exist" });
+      }
+    } else {
+      return res.status(401).json({
+        success: false,
+        message: "Sorry you are not an admin or editor",
+      });
+    }
   } catch (error: any | { message: string }) {
-    res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message });
   }
 };
 

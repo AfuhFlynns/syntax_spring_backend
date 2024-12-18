@@ -15,7 +15,7 @@ import userRouter from "./routers/users.router.js";
 import challengesRouter from "./routers/challenges.router.js";
 import GeminiRouter from "./routers/gemini.router.js";
 import verifyTokens from "./middlewares/verifyTokens.js";
-import rootRouter from "./routers/root.router.js";
+import checkAuthRouter from "./routers/root.router.js";
 connectDB();
 dotenv.config();
 const PORT = Number(process.env.PORT) | 8000;
@@ -24,13 +24,17 @@ const app = express();
 app.use(morgan("dev"));
 app.use(cors({
     origin: function (origin, callback) {
-        if (allowedOrigins.indexOf(String(origin)) !== -1 || !origin) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin)
+            return callback(null, true);
+        if (allowedOrigins.indexOf(origin) !== -1) {
             callback(null, true);
         }
         else {
             callback(new Error("Not allowed by CORS"));
         }
     },
+    credentials: true,
     optionsSuccessStatus: 200,
 }));
 app.use(cookieParser());
@@ -38,7 +42,10 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json()); // Accept json parsing
-app.use("/", rootRouter);
+app.use("/auth/users", checkAuthRouter);
+app.get("/", (req, res) => {
+    res.status(200).send("<h1>Syntax Spring Server Live Now</h1>");
+});
 // Listen to request from the users route
 app.use("/auth/users", userRouter);
 // Listen to requests from the challenges route

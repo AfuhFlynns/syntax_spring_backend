@@ -33,22 +33,42 @@ const getAllChallenges = (req, res) => __awaiter(void 0, void 0, void 0, functio
 });
 const createChallenges = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { challenge } = req.body;
+    const role = req.role;
     try {
         if (!challenge)
             return res
                 .status(401)
                 .json({ success: false, message: "A challenge body must be provided" });
-        // Check if challenge already exist
-        // const foundChallenge = challengesSchema.findOne({title: challenge?.title});
-        // if(foundChallenge) return res.status(400).json({success: false, message: "Challenge already exist"});
-        const newChallenges = new challengesSchema(challenge);
-        const savedChallenges = yield newChallenges.save();
-        // GEt the document
-        const challengesObject = savedChallenges.toObject();
-        res.status(200).json({ success: true, challenges: challengesObject });
+        //Authenticate users role
+        if (role !== "user") {
+            // Check if challenge already exist
+            const foundChallenge = challengesSchema.findOne({
+                title: challenge.title,
+            });
+            if (!foundChallenge) {
+                const newChallenges = new challengesSchema(challenge);
+                const savedChallenges = yield newChallenges.save();
+                // GEt the document
+                const challengesObject = savedChallenges.toObject();
+                return res
+                    .status(200)
+                    .json({ success: true, challenges: challengesObject });
+            }
+            else {
+                return res
+                    .status(409)
+                    .json({ success: false, message: "Challenge already exist" });
+            }
+        }
+        else {
+            return res.status(401).json({
+                success: false,
+                message: "Sorry you are not an admin or editor",
+            });
+        }
     }
     catch (error) {
-        res.status(500).json({ success: false, message: error.message });
+        return res.status(500).json({ success: false, message: error.message });
     }
 });
 export { getAllChallenges, createChallenges };
