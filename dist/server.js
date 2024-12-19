@@ -49,7 +49,7 @@ app.get("/", (req, res) => {
 // Listen to request from the users route
 app.use("/auth/users", userRouter);
 // Listen to requests from the challenges route
-app.use("/challenges/api/v1", verifyTokens, challengesRouter);
+app.use("/challenges/api/v1", challengesRouter);
 // Listen to requests to ai
 app.use("/assist/api/v1", verifyTokens, GeminiRouter);
 //ALERT: Listen for unknown urls

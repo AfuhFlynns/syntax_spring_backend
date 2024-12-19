@@ -99,6 +99,8 @@ const logInUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             });
         //Generate access otkens and send cookie
         const { accessToken, expiresAt } = yield generateTokens(res, String(foundUser === null || foundUser === void 0 ? void 0 : foundUser.email), String(foundUser === null || foundUser === void 0 ? void 0 : foundUser.username), String(foundUser === null || foundUser === void 0 ? void 0 : foundUser._id), String(foundUser === null || foundUser === void 0 ? void 0 : foundUser.role));
+        //Clear tokens
+        foundUser.tokens = [];
         // Rearrange user data tokens
         foundUser.tokens = [
             ...(foundUser.tokens || []),
@@ -357,11 +359,21 @@ const getUserData = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
                 success: false,
                 message: "User not found",
             }); // Clear cookie
-        const userObject = foundUser.toObject();
+        const userObject = foundUser.toObject(); // Get only user object
+        const allUsers = yield User.find(); // Return's all users
+        const responseUsersArray = [];
+        // Hide users passwords and tokens
+        allUsers.map((user) => {
+            user.password = "";
+            user.tokens = [];
+            user.codes = [];
+            responseUsersArray.push(user);
+        });
         return res.status(200).json({
             success: true,
             message: `Hi, ${foundUser.username}. Welcome to Syntax Spring!`,
             user: userObject,
+            users: allUsers,
         });
     }
     catch (error) {

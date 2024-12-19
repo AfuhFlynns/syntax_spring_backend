@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { Router } from "express";
 import { deleteUser, forgotPassword, logInUser, logOutUser, resetPassword, signUpUser, verifyUser, } from "../controllers/users.controller.js";
+import verifyTokens from "../middlewares/verifyTokens.js";
 const userRouter = Router();
 userRouter.post("/sign-up", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -64,7 +65,7 @@ userRouter.put("/reset-password/:token", (req, res) => __awaiter(void 0, void 0,
         res.status(500).json({ error: "Internal server error" });
     }
 }));
-userRouter.delete("/delete-account", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+userRouter.delete("/delete-account", verifyTokens, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield deleteUser(req, res);
     }

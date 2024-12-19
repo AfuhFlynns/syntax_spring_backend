@@ -15,7 +15,7 @@ import {
 import { config } from "dotenv";
 import generateTokens from "../utils/generateTokens.js";
 import generateResetToken from "../utils/generateResetToken.js";
-import { CustomRequest } from "../TYPES.js";
+import { CustomRequest, usersSchemaTypes } from "../TYPES.js";
 
 // Load env vars
 config();
@@ -117,6 +117,8 @@ const logInUser = async (req: Request, res: Response) => {
       String(foundUser?._id),
       String(foundUser?.role)
     );
+    //Clear tokens
+    foundUser.tokens = [];
     // Rearrange user data tokens
     foundUser.tokens = [
       ...(foundUser.tokens || []),
@@ -397,11 +399,21 @@ const getUserData = async (req: CustomRequest, res: Response) => {
         message: "User not found",
       }); // Clear cookie
 
-    const userObject = foundUser.toObject();
+    const userObject = foundUser.toObject(); // Get only user object
+    const allUsers = await User.find(); // Return's all users
+    const responseUsersArray: usersSchemaTypes[] = [];
+    // Hide users passwords and tokens
+    allUsers.map((user) => {
+      user.password = "";
+      user.tokens = [];
+      user.codes = [];
+      responseUsersArray.push(user);
+    });
     return res.status(200).json({
       success: true,
       message: `Hi, ${foundUser.username}. Welcome to Syntax Spring!`,
       user: userObject,
+      users: allUsers,
     });
   } catch (error: any | { message: string }) {
     res.status(500).json({ success: false, message: error.message });

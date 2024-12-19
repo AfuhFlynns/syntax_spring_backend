@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { Router } from "express";
 import { createChallenges, getAllChallenges, } from "../controllers/challenges.controller.js";
+import verifyTokens from "../middlewares/verifyTokens.js";
 const challengesRouter = Router();
 challengesRouter.get("/all", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -19,7 +20,7 @@ challengesRouter.get("/all", (req, res) => __awaiter(void 0, void 0, void 0, fun
         res.status(500).json({ error: "Internal server error" });
     }
 }));
-challengesRouter.post("/new-challenge", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+challengesRouter.post("/new-challenge", verifyTokens, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield createChallenges(req, res);
     }

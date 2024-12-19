@@ -16,9 +16,10 @@ const verifyTokens = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     const sentCookie = (_a = req.cookies) === null || _a === void 0 ? void 0 : _a.accessToken;
     try {
         if (!sentCookie) {
-            res
-                .status(401)
-                .json({ success: false, message: "Please login into your account" });
+            res.status(401).json({
+                success: false,
+                message: "Please login and verify your account. Or create one",
+            });
             return;
         }
         const foundUser = yield User.findOne({
@@ -34,7 +35,7 @@ const verifyTokens = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         if (!foundUser) {
             res.status(401).json({
                 success: false,
-                message: "Please login and activate your account. Or create one",
+                message: "Please login and verify your account. Or create one",
             });
             return;
         }

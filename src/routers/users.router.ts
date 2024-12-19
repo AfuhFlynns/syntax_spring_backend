@@ -8,6 +8,7 @@ import {
   signUpUser,
   verifyUser,
 } from "../controllers/users.controller.js";
+import verifyTokens from "../middlewares/verifyTokens.js";
 
 const userRouter = Router();
 
@@ -62,13 +63,17 @@ userRouter.put(
     }
   }
 );
-userRouter.delete("/delete-account", async (req: Request, res: Response) => {
-  try {
-    await deleteUser(req, res);
-  } catch (error) {
-    console.error("Error in sign-up route:", error);
-    res.status(500).json({ error: "Internal server error" });
+userRouter.delete(
+  "/delete-account",
+  verifyTokens,
+  async (req: Request, res: Response) => {
+    try {
+      await deleteUser(req, res);
+    } catch (error) {
+      console.error("Error in sign-up route:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
   }
-});
+);
 
 export default userRouter;
