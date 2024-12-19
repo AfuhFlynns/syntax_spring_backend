@@ -30,6 +30,10 @@
     "npm:nodemailer@^6.9.16": "6.9.16",
     "npm:nodemon@^3.1.7": "3.1.7",
     "npm:npm@^10.9.1": "10.9.2",
+    "npm:passport-github@^1.1.0": "1.1.0",
+    "npm:passport-google-oauth20@2": "2.0.0",
+    "npm:passport@0.7": "0.7.0",
+    "npm:password@~0.1.1": "0.1.1",
     "npm:ts-node@^10.9.2": "10.9.2_@types+node@22.5.4_typescript@5.7.2",
     "npm:twilio@^5.3.7": "5.3.7",
     "npm:typescript@^5.6.3": "5.7.2",
@@ -2082,6 +2086,9 @@
         "set-blocking"
       ]
     },
+    "oauth@0.10.0": {
+      "integrity": "sha512-1orQ9MT1vHFGQxhuy7E/0gECD3fd2fCC+PIX+/jgmU/gI3EpRocXtmtvxCO5x3WZ443FLTLFWNDjl5MPJf9u+Q=="
+    },
     "object-assign@4.1.1": {
       "integrity": "sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg=="
     },
@@ -2197,6 +2204,42 @@
     "parseurl@1.3.3": {
       "integrity": "sha512-CiyeOxFT/JZyN5m0z9PfXw4SCBJ6Sygz1Dpl0wqjlhDEGGBP1GnsUVEL0p63hoG1fcj3fHynXi9NYO4nWOL+qQ=="
     },
+    "passport-github@1.1.0": {
+      "integrity": "sha512-XARXJycE6fFh/dxF+Uut8OjlwbFEXgbPVj/+V+K7cvriRK7VcAOm+NgBmbiLM9Qv3SSxEAV+V6fIk89nYHXa8A==",
+      "dependencies": [
+        "passport-oauth2"
+      ]
+    },
+    "passport-google-oauth20@2.0.0": {
+      "integrity": "sha512-KSk6IJ15RoxuGq7D1UKK/8qKhNfzbLeLrG3gkLZ7p4A6DBCcv7xpyQwuXtWdpyR0+E0mwkpjY1VfPOhxQrKzdQ==",
+      "dependencies": [
+        "passport-oauth2"
+      ]
+    },
+    "passport-oauth2@1.8.0": {
+      "integrity": "sha512-cjsQbOrXIDE4P8nNb3FQRCCmJJ/utnFKEz2NX209f7KOHPoX18gF7gBzBbLLsj2/je4KrgiwLLGjf0lm9rtTBA==",
+      "dependencies": [
+        "base64url",
+        "oauth",
+        "passport-strategy",
+        "uid2",
+        "utils-merge"
+      ]
+    },
+    "passport-strategy@1.0.0": {
+      "integrity": "sha512-CB97UUvDKJde2V0KDWWB3lyf6PC3FaZP7YxZ2G8OAtn9p4HI9j9JLP9qjOGZFvyl8uwNT8qM+hGnz/n16NI7oA=="
+    },
+    "passport@0.7.0": {
+      "integrity": "sha512-cPLl+qZpSc+ireUvt+IzqbED1cHHkDoVYMo30jbJIdOOjQ1MQYZBPiNvmi8UM6lJuOpTPXJGZQk0DtC4y61MYQ==",
+      "dependencies": [
+        "passport-strategy",
+        "pause",
+        "utils-merge"
+      ]
+    },
+    "password@0.1.1": {
+      "integrity": "sha512-fGltziTjwSxDdKSh2OsYZ0QRURUKllHaFjxYmZCCBn4Gg/7LWoAZvkDtHagfcXOpCtCNxw8EDMWKgqQsYMALAw=="
+    },
     "path-is-absolute@1.0.1": {
       "integrity": "sha512-AVbw3UJ2e9bq64vSaS9Am0fje1Pa8pbGqTTsmXfaIiMpnr5DlDhfJOuLj9Sf95ZPVDAUerDfEk88MPmPe7UCQg=="
     },
@@ -2212,6 +2255,9 @@
     },
     "path-to-regexp@0.1.12": {
       "integrity": "sha512-RA1GjUVMnvYFxuqovrEqZoxxW5NUZqbwKtYz/Tt7nXerk0LbLblQmrsgdeOxV5SFHf0UDggjS/bSeOZwt1pmEQ=="
+    },
+    "pause@0.0.1": {
+      "integrity": "sha512-KG8UEiEVkR3wGEb4m5yZkVCzigAD+cVEJck2CzYZO37ZGJfctvVptVO192MwrtPhzONn6go8ylnOdMhKqi4nfg=="
     },
     "picomatch@2.3.1": {
       "integrity": "sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA=="
@@ -2699,6 +2745,9 @@
     "typescript@5.7.2": {
       "integrity": "sha512-i5t66RHxDvVN40HfDd1PsEThGNnlMCMT3jMUuoh9/0TaqWevNontacunWyN02LA9/fIbEWlcHZcgTKb9QoaLfg=="
     },
+    "uid2@0.0.4": {
+      "integrity": "sha512-IevTus0SbGwQzYh3+fRsAMTVVPOoIVufzacXcHPmdlle1jUpq7BRL+mw3dgeLanvGZdwwbWhRV6XrcFNdBmjWA=="
+    },
     "undefsafe@2.0.5": {
       "integrity": "sha512-WxONCrssBM8TSPRqN5EmsjVrsv4A8X12J4ArBiiayv3DyyG3ZlIg6yysuuSYdZsVz3TKcTg2fd//Ujd4CHV1iA=="
     },
@@ -2881,6 +2930,10 @@
         "npm:nodemailer@^6.9.16",
         "npm:nodemon@^3.1.7",
         "npm:npm@^10.9.1",
+        "npm:passport-github@^1.1.0",
+        "npm:passport-google-oauth20@2",
+        "npm:passport@0.7",
+        "npm:password@~0.1.1",
         "npm:ts-node@^10.9.2",
         "npm:twilio@^5.3.7",
         "npm:typescript@^5.6.3",
