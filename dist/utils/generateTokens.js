@@ -21,7 +21,7 @@ const generateTokens = (res, email, username, id, userRole) => __awaiter(void 0,
     const expiresAt = new Date(dateNow);
     res.cookie("accessToken", accessToken, {
         httpOnly: true,
-        secure: process.env.APP_STATUS === "production" && true,
+        secure: true,
         sameSite: "strict",
         maxAge: dateNow,
     });
