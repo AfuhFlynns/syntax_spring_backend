@@ -22,7 +22,7 @@ const generateTokens = (res, email, username, id, userRole) => __awaiter(void 0,
     res.cookie("accessToken", accessToken, {
         httpOnly: true,
         secure: true,
-        sameSite: "strict",
+        sameSite: "None",
         maxAge: dateNow,
     });
     return { accessToken, expiresAt };
