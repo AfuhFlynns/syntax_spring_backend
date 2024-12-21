@@ -20,11 +20,12 @@ const generateTokens = (res, email, username, id, userRole) => __awaiter(void 0,
     const dateNow = Date.now() + 720 * 60 * 60 * 1000;
     const expiresAt = new Date(dateNow);
     res.cookie("accessToken", accessToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "None",
-        maxAge: dateNow,
-    });
+    httpOnly: true,        // Prevent access via JavaScript
+    secure: true,          // Ensure cookies are sent only over HTTPS
+    sameSite: "None",      // Required for cross-origin requests
+    maxAge: 720 * 60 * 60 * 1000, // Cookie lifetime in milliseconds (30 days)
+});
+
     return { accessToken, expiresAt };
 });
 export default generateTokens;
