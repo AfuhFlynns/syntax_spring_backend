@@ -20,8 +20,11 @@ connectDB();
 dotenv.config();
 const PORT = Number(process.env.PORT) | 8000;
 const app = express();
+
 // Third party middle wares
 app.use(morgan("combined"));
+
+app.use(cookieParser());
 app.use(
   cors({
     origin: allowedOrigin, // Allow only this origin
@@ -29,7 +32,7 @@ app.use(
     optionsSuccessStatus: 200, // For legacy browser support
   })
 );
-app.use(cookieParser());
+
 //Middle wares
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
