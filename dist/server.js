@@ -10,7 +10,7 @@ import mongoose from "mongoose";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 import connectDB from "./utils/DB/connectDB.js";
-import allowedOrigins from "./utils/cors/corsOptions.js";
+import allowedOrigin from "./utils/cors/corsOptions.js";
 import userRouter from "./routers/users.router.js";
 import challengesRouter from "./routers/challenges.router.js";
 import GeminiRouter from "./routers/gemini.router.js";
@@ -22,21 +22,13 @@ const PORT = Number(process.env.PORT) | 8000;
 const app = express();
 // Third party middle wares
 app.use(morgan("combined"));
-app.use(cors({
-    origin: function (origin, callback) {
-        // Allow requests with no origin (like mobile apps or curl requests)
-        if (!origin)
-            return callback(null, true);
-        if (allowedOrigins.indexOf(origin) !== -1) {
-            callback(null, true);
-        }
-        else {
-            callback(new Error("Not allowed by CORS"));
-        }
-    },
-    credentials: true,
-    optionsSuccessStatus: 200,
-}));
+app.use(
+  cors({
+    origin: allowedOrigin, // Allow only this origin
+    credentials: true,     // Allow cookies and other credentials
+    optionsSuccessStatus: 200, // For legacy browser support
+  })
+);
 app.use(cookieParser());
 //Middle wares
 app.use(express.urlencoded({ extended: true }));
