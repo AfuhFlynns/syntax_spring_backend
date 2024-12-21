@@ -21,7 +21,7 @@ dotenv.config();
 const PORT = Number(process.env.PORT) | 8000;
 const app = express();
 // Third party middle wares
-app.use(morgan("dev"));
+app.use(morgan("combined"));
 app.use(cors({
     origin: function (origin, callback) {
         // Allow requests with no origin (like mobile apps or curl requests)
