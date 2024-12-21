@@ -1,8 +1,4 @@
-import { config } from "dotenv";
-config();
-const allowedOrigins = [
-    process.env.CLIENT_URL,
-    process.env.EXTERNAL_CLIENT_URL,
-];
-export default allowedOrigins;
+
+const allowedOrigin = "https://syntax-springdev.vercel.app/";
+export default allowedOrigin;
 //# sourceMappingURL=corsOptions.js.map
