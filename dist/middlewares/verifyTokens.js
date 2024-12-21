@@ -33,17 +33,17 @@ const verifyTokens = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             isActive: true,
         });
         if (!foundUser) {
-            res.status(401).json({
+            res.status(403).json({
                 success: false,
-                message: "Please login and verify your account. Or create one",
+                message: "Invalid or expired token",
             });
             return;
         }
         jwt.verify(sentCookie, process.env.ACCESS_TOKEN_SECRET, { algorithms: ["HS256"] }, (error, decoded) => {
             if (error) {
-                res.status(401).json({
+                res.status(403).json({
                     success: false,
-                    message: "Please login and activate your account. Or create one",
+                    message: "Invalid or expired token",
                 });
                 return;
             }

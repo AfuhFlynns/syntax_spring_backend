@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { Router } from "express";
-import { createChallenges, getAllChallenges, } from "../controllers/challenges.controller.js";
+import { createChallenges, getAllChallenges, getSpecificChallenges, } from "../controllers/challenges.controller.js";
 import verifyTokens from "../middlewares/verifyTokens.js";
 const challengesRouter = Router();
 challengesRouter.get("/all", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -16,13 +16,22 @@ challengesRouter.get("/all", (req, res) => __awaiter(void 0, void 0, void 0, fun
         yield getAllChallenges(req, res);
     }
     catch (error) {
-        console.error("Error in sign-up route:", error);
+        console.error("Error in challenges route:", error);
         res.status(500).json({ error: "Internal server error" });
     }
 }));
 challengesRouter.post("/new-challenge", verifyTokens, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield createChallenges(req, res);
+    }
+    catch (error) {
+        console.error("Error in challenges route:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+}));
+challengesRouter.post("/specific-challenge", verifyTokens, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield getSpecificChallenges(req, res);
     }
     catch (error) {
         console.error("Error in sign-up route:", error);

@@ -14,6 +14,7 @@ import { sendAccountDeleteEmail, sendLogoutEmail, sendNotificationEmail, sendPas
 import { config } from "dotenv";
 import generateTokens from "../utils/generateTokens.js";
 import generateResetToken from "../utils/generateResetToken.js";
+import { challengesSchema } from "../models/challenges.model.js";
 // Load env vars
 config();
 const signUpUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -28,6 +29,7 @@ const signUpUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         const foundUser = yield User.findOne({
             $or: [{ email: email }, { username: username }],
         });
+        // Validate password, username and email
         if (foundUser)
             return res.status(409).json({
                 success: false,
@@ -86,16 +88,16 @@ const logInUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             $or: [{ email: value }, { username: value }],
         }); // Check user email first
         if (!foundUser)
-            return res.status(400).json({
+            return res.status(403).json({
                 success: false,
-                message: "User email or username does not exist",
+                message: "Invalid username, email or password",
             });
         const hashedPwd = foundUser.password;
         const userMatch = yield bcrypt.compare(password, hashedPwd);
         if (!userMatch)
-            return res.status(400).json({
+            return res.status(403).json({
                 success: false,
-                message: "Invalid credentials",
+                message: "Invalid username, email or password",
             });
         //Generate access otkens and send cookie
         const { accessToken, expiresAt } = yield generateTokens(res, String(foundUser === null || foundUser === void 0 ? void 0 : foundUser.email), String(foundUser === null || foundUser === void 0 ? void 0 : foundUser.username), String(foundUser === null || foundUser === void 0 ? void 0 : foundUser._id), String(foundUser === null || foundUser === void 0 ? void 0 : foundUser.role));
@@ -139,7 +141,7 @@ const verifyUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             },
         }); // Check user email first
         if (!foundUser)
-            return res.status(400).json({
+            return res.status(403).json({
                 success: false,
                 message: "Invalid or expired verification code",
             });
@@ -152,7 +154,7 @@ const verifyUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         yield sendWelcomeEmail(foundUser.email, foundUser.username, {
             "X-Category": "email_welcome",
         });
-        return res.status(200).json({
+        return res.status(202).json({
             success: true,
             message: `User ${foundUser.username} verified successfully`,
         });
@@ -361,6 +363,7 @@ const getUserData = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             }); // Clear cookie
         const userObject = foundUser.toObject(); // Get only user object
         const allUsers = yield User.find(); // Return's all users
+        const allChallenges = yield challengesSchema.find(); // Fetch all challenges
         const responseUsersArray = [];
         // Hide users passwords and tokens
         allUsers.map((user) => {
@@ -374,6 +377,7 @@ const getUserData = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             message: `Hi, ${foundUser.username}. Welcome to Syntax Spring!`,
             user: userObject,
             users: allUsers,
+            challenges: allChallenges,
         });
     }
     catch (error) {

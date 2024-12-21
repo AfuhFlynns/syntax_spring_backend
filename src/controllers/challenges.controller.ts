@@ -3,6 +3,24 @@ import { challengesSchema } from "../models/challenges.model.js";
 import { CustomRequest } from "../TYPES.js";
 
 const getAllChallenges = async (req: Request, res: Response) => {
+  try {
+    const foundChallenges = await challengesSchema.find();
+
+    if (!foundChallenges || foundChallenges.length === 0) {
+      return res
+        .status(202)
+        .json({ success: false, message: "No challenges found!" });
+    }
+
+    console.clear();
+    // console.table(foundChallenges.length);
+
+    res.status(200).json({ success: true, challenges: foundChallenges });
+  } catch (error: any | { message: string }) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+const getSpecificChallenges = async (req: Request, res: Response) => {
   const { type, difficulty } = req.query;
 
   // Explicitly define the filter types to ensure compatibility with req.query
@@ -69,4 +87,4 @@ const createChallenges = async (req: CustomRequest, res: Response) => {
   }
 };
 
-export { getAllChallenges, createChallenges };
+export { getAllChallenges, createChallenges, getSpecificChallenges };

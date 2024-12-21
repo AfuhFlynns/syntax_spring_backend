@@ -9,6 +9,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { challengesSchema } from "../models/challenges.model.js";
 const getAllChallenges = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const foundChallenges = yield challengesSchema.find();
+        if (!foundChallenges || foundChallenges.length === 0) {
+            return res
+                .status(202)
+                .json({ success: false, message: "No challenges found!" });
+        }
+        console.clear();
+        // console.table(foundChallenges.length);
+        res.status(200).json({ success: true, challenges: foundChallenges });
+    }
+    catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+const getSpecificChallenges = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { type, difficulty } = req.query;
     // Explicitly define the filter types to ensure compatibility with req.query
     const filter = {};
@@ -71,5 +87,5 @@ const createChallenges = (req, res) => __awaiter(void 0, void 0, void 0, functio
         return res.status(500).json({ success: false, message: error.message });
     }
 });
-export { getAllChallenges, createChallenges };
+export { getAllChallenges, createChallenges, getSpecificChallenges };
 //# sourceMappingURL=challenges.controller.js.map

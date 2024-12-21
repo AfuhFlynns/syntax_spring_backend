@@ -2,6 +2,9 @@ import { config } from "dotenv";
 
 config();
 
-const allowedOrigins = ["http://localhost:5000", "http://192.168.92.182:5000"];
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  process.env.EXTERNAL_CLIENT_URL,
+];
 
 export default allowedOrigins;

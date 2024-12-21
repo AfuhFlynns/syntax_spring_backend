@@ -32,9 +32,9 @@ const verifyTokens = async (
     });
 
     if (!foundUser) {
-      res.status(401).json({
+      res.status(403).json({
         success: false,
-        message: "Please login and verify your account. Or create one",
+        message: "Invalid or expired token",
       });
       return;
     }
@@ -45,9 +45,9 @@ const verifyTokens = async (
       { algorithms: ["HS256"] },
       (error, decoded: any) => {
         if (error) {
-          res.status(401).json({
+          res.status(403).json({
             success: false,
-            message: "Please login and activate your account. Or create one",
+            message: "Invalid or expired token",
           });
           return;
         }

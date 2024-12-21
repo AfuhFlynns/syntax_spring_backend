@@ -16,6 +16,7 @@ import { config } from "dotenv";
 import generateTokens from "../utils/generateTokens.js";
 import generateResetToken from "../utils/generateResetToken.js";
 import { CustomRequest, usersSchemaTypes } from "../TYPES.js";
+import { challengesSchema } from "../models/challenges.model.js";
 
 // Load env vars
 config();
@@ -32,6 +33,8 @@ const signUpUser = async (req: Request, res: Response) => {
     const foundUser = await User.findOne({
       $or: [{ email: email }, { username: username }],
     });
+    // Validate password, username and email
+
     if (foundUser)
       return res.status(409).json({
         success: false,
@@ -95,18 +98,18 @@ const logInUser = async (req: Request, res: Response) => {
       $or: [{ email: value }, { username: value }],
     }); // Check user email first
     if (!foundUser)
-      return res.status(400).json({
+      return res.status(403).json({
         success: false,
-        message: "User email or username does not exist",
+        message: "Invalid username, email or password",
       });
 
     const hashedPwd = foundUser.password;
     const userMatch = await bcrypt.compare(password, hashedPwd);
 
     if (!userMatch)
-      return res.status(400).json({
+      return res.status(403).json({
         success: false,
-        message: "Invalid credentials",
+        message: "Invalid username, email or password",
       });
 
     //Generate access otkens and send cookie
@@ -166,7 +169,7 @@ const verifyUser = async (req: Request, res: Response) => {
       },
     }); // Check user email first
     if (!foundUser)
-      return res.status(400).json({
+      return res.status(403).json({
         success: false,
         message: "Invalid or expired verification code",
       });
@@ -182,7 +185,7 @@ const verifyUser = async (req: Request, res: Response) => {
       "X-Category": "email_welcome",
     });
 
-    return res.status(200).json({
+    return res.status(202).json({
       success: true,
       message: `User ${foundUser.username} verified successfully`,
     });
@@ -401,6 +404,7 @@ const getUserData = async (req: CustomRequest, res: Response) => {
 
     const userObject = foundUser.toObject(); // Get only user object
     const allUsers = await User.find(); // Return's all users
+    const allChallenges = await challengesSchema.find(); // Fetch all challenges
     const responseUsersArray: usersSchemaTypes[] = [];
     // Hide users passwords and tokens
     allUsers.map((user) => {
@@ -414,6 +418,7 @@ const getUserData = async (req: CustomRequest, res: Response) => {
       message: `Hi, ${foundUser.username}. Welcome to Syntax Spring!`,
       user: userObject,
       users: allUsers,
+      challenges: allChallenges,
     });
   } catch (error: any | { message: string }) {
     res.status(500).json({ success: false, message: error.message });
